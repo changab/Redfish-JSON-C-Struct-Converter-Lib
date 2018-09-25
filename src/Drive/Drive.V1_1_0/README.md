@@ -1,0 +1,212 @@
+# Definition of Drive.V1_1_0 and functions<br><br>
+
+## Drive_Actions
+    typedef struct _RedfishDrive_V1_1_0_Drive_Actions_CS {
+        RedfishDrive_V1_1_0_SecureErase_CS *Drive_SecureErase;
+        RedfishDrive_V1_1_0_Drive_Actions_Oem_CS *Oem;
+    } RedfishDrive_V1_1_0_Drive_Actions_CS;
+
+|Field |C Structure Data Type|Description |Required Property|Read only Property
+| ---  | --- | --- | --- | ---
+|**Drive_SecureErase**|RedfishDrive_V1_1_0_SecureErase_CS| Structure points to **#Drive.SecureErase** property.| No| No
+|**Oem**|RedfishDrive_V1_1_0_Drive_Actions_Oem_CS| Structure points to **Oem** property.| No| No
+
+
+## Drive_Actions_Oem
+    typedef struct _RedfishDrive_V1_1_0_Drive_Actions_Oem_CS {
+        RedfishCS_Link Prop;
+    } RedfishDrive_V1_1_0_Drive_Actions_Oem_CS;
+
+|Field |C Structure Data Type|Description |Required Property|Read only Property
+| ---  | --- | --- | --- | ---
+|**Prop**|RedfishCS_Link| Structure link list to OEM defined property| ---| ---
+
+
+## Drive_Links
+    typedef struct _RedfishDrive_V1_1_0_Drive_Links_CS {
+        RedfishCS_Link Endpoints;
+        RedfishCS_int64 *Endpointsodata_count;
+        RedfishCS_char *Endpointsodata_navigationLink;
+        RedfishResource_Oem_CS *Oem;
+        RedfishCS_Link Volumes;
+        RedfishCS_int64 *Volumesodata_count;
+        RedfishCS_char *Volumesodata_navigationLink;
+    } RedfishDrive_V1_1_0_Drive_Links_CS;
+
+|Field |C Structure Data Type|Description |Required Property|Read only Property
+| ---  | --- | --- | --- | ---
+|**Endpoints**|RedfishCS_Link| Structure link list to **Endpoints** property.| No| Yes
+|**Endpointsodata_count**|RedfishCS_int64| 64-bit long long interger pointer to **Endpoints@odata.count** property.| No| No
+|**Endpointsodata_navigationLink**|RedfishCS_char| String pointer to **Endpoints@odata.navigationLink** property.| No| No
+|**Oem**|RedfishResource_Oem_CS| Structure points to **Oem** property.| No| No
+|**Volumes**|RedfishCS_Link| Structure link list to **Volumes** property.| No| Yes
+|**Volumesodata_count**|RedfishCS_int64| 64-bit long long interger pointer to **Volumes@odata.count** property.| No| No
+|**Volumesodata_navigationLink**|RedfishCS_char| String pointer to **Volumes@odata.navigationLink** property.| No| No
+
+
+## SecureErase
+    typedef struct _RedfishDrive_V1_1_0_SecureErase_CS {
+        RedfishCS_char *target;
+        RedfishCS_char *title;
+    } RedfishDrive_V1_1_0_SecureErase_CS;
+
+|Field |C Structure Data Type|Description |Required Property|Read only Property
+| ---  | --- | --- | --- | ---
+|**target**|RedfishCS_char| String pointer to **target** property.| No| No
+|**title**|RedfishCS_char| String pointer to **title** property.| No| No
+
+
+## Oem
+    typedef struct _RedfishResource_Oem_CS {
+        RedfishCS_Link Prop;
+    } RedfishResource_Oem_CS;
+
+|Field |C Structure Data Type|Description |Required Property|Read only Property
+| ---  | --- | --- | --- | ---
+|**Prop**|RedfishCS_Link| Structure link list to OEM defined property| ---| ---
+
+
+## Status
+    typedef struct _RedfishResource_Status_CS {
+        RedfishCS_char *Health;
+        RedfishCS_char *HealthRollup;
+        RedfishResource_Oem_CS *Oem;
+        RedfishCS_char *State;
+    } RedfishResource_Status_CS;
+
+|Field |C Structure Data Type|Description |Required Property|Read only Property
+| ---  | --- | --- | --- | ---
+|**Health**|RedfishCS_char| String pointer to **Health** property.| No| Yes
+|**HealthRollup**|RedfishCS_char| String pointer to **HealthRollup** property.| No| Yes
+|**Oem**|RedfishResource_Oem_CS| Structure points to **Oem** property.| No| No
+|**State**|RedfishCS_char| String pointer to **State** property.| No| Yes
+
+
+## Identifier
+    typedef struct _RedfishResource_V1_1_0_Identifier_CS {
+        RedfishCS_char *DurableName;
+        RedfishCS_char *DurableNameFormat;
+    } RedfishResource_V1_1_0_Identifier_CS;
+
+|Field |C Structure Data Type|Description |Required Property|Read only Property
+| ---  | --- | --- | --- | ---
+|**DurableName**|RedfishCS_char| String pointer to **DurableName** property.| No| Yes
+|**DurableNameFormat**|RedfishCS_char| String pointer to **DurableNameFormat** property.| No| Yes
+
+
+## Location
+    typedef struct _RedfishResource_V1_1_0_Location_CS {
+        RedfishCS_char *Info;
+        RedfishCS_char *InfoFormat;
+        RedfishResource_Oem_CS *Oem;
+    } RedfishResource_V1_1_0_Location_CS;
+
+|Field |C Structure Data Type|Description |Required Property|Read only Property
+| ---  | --- | --- | --- | ---
+|**Info**|RedfishCS_char| String pointer to **Info** property.| No| Yes
+|**InfoFormat**|RedfishCS_char| String pointer to **InfoFormat** property.| No| Yes
+|**Oem**|RedfishResource_Oem_CS| Structure points to **Oem** property.| No| No
+
+
+## Operations
+    typedef struct _RedfishVolume_V1_0_0_Operations_CS {
+        RedfishCS_Link AssociatedTask;
+        RedfishCS_char *OperationName;
+        RedfishCS_int64 *PercentageComplete;
+    } RedfishVolume_V1_0_0_Operations_CS;
+
+|Field |C Structure Data Type|Description |Required Property|Read only Property
+| ---  | --- | --- | --- | ---
+|**AssociatedTask**|RedfishCS_Link| Structure link list to **AssociatedTask** property.| No| Yes
+|**OperationName**|RedfishCS_char| String pointer to **OperationName** property.| No| Yes
+|**PercentageComplete**|RedfishCS_int64| 64-bit long long interger pointer to **PercentageComplete** property.| No| Yes
+
+
+## Drive
+    typedef struct _RedfishDrive_V1_1_0_Drive_CS {
+        RedfishCS_Header     Header;
+        RedfishCS_char *odata_context;
+        RedfishCS_char *odata_id;
+        RedfishCS_char *odata_type;
+        RedfishDrive_V1_1_0_Drive_Actions_CS *Actions;
+        RedfishCS_char *AssetTag;
+        RedfishCS_int64 *BlockSizeBytes;
+        RedfishCS_int64 *CapableSpeedGbs;
+        RedfishCS_int64 *CapacityBytes;
+        RedfishCS_char *Description;
+        RedfishCS_char *EncryptionAbility;
+        RedfishCS_char *EncryptionStatus;
+        RedfishCS_bool *FailurePredicted;
+        RedfishCS_char *HotspareType;
+        RedfishCS_char *Id;
+        RedfishResource_V1_1_0_Identifier_CS *Identifiers;
+        RedfishCS_char *IndicatorLED;
+        RedfishDrive_V1_1_0_Drive_Links_CS *Links;
+        RedfishResource_V1_1_0_Location_CS *Location;
+        RedfishCS_char *Manufacturer;
+        RedfishCS_char *MediaType;
+        RedfishCS_char *Model;
+        RedfishCS_char *Name;
+        RedfishCS_int64 *NegotiatedSpeedGbs;
+        RedfishResource_Oem_CS *Oem;
+        RedfishVolume_V1_0_0_Operations_CS *Operations;
+        RedfishCS_char *PartNumber;
+        RedfishCS_int64 *PredictedMediaLifeLeftPercent;
+        RedfishCS_char *Protocol;
+        RedfishCS_char *Revision;
+        RedfishCS_int64 *RotationSpeedRPM;
+        RedfishCS_char *SKU;
+        RedfishCS_char *SerialNumber;
+        RedfishResource_Status_CS *Status;
+        RedfishCS_char *StatusIndicator;
+    } RedfishDrive_V1_1_0_Drive_CS;
+
+|Field |C Structure Data Type|Description |Required Property|Read only Property
+| ---  | --- | --- | --- | ---
+|**Header**|RedfishCS_Header|Redfish C structure header|---|---
+|**odata_context**|RedfishCS_char| String pointer to **@odata.context** property.| No| No
+|**odata_id**|RedfishCS_char| String pointer to **@odata.id** property.| No| No
+|**odata_type**|RedfishCS_char| String pointer to **@odata.type** property.| No| No
+|**Actions**|RedfishDrive_V1_1_0_Drive_Actions_CS| Structure points to **Actions** property.| No| Yes
+|**AssetTag**|RedfishCS_char| String pointer to **AssetTag** property.| No| No
+|**BlockSizeBytes**|RedfishCS_int64| 64-bit long long interger pointer to **BlockSizeBytes** property.| No| Yes
+|**CapableSpeedGbs**|RedfishCS_int64| 64-bit long long interger pointer to **CapableSpeedGbs** property.| No| Yes
+|**CapacityBytes**|RedfishCS_int64| 64-bit long long interger pointer to **CapacityBytes** property.| No| Yes
+|**Description**|RedfishCS_char| String pointer to **Description** property.| No| No
+|**EncryptionAbility**|RedfishCS_char| String pointer to **EncryptionAbility** property.| No| Yes
+|**EncryptionStatus**|RedfishCS_char| String pointer to **EncryptionStatus** property.| No| Yes
+|**FailurePredicted**|RedfishCS_bool| Boolean pointer to **FailurePredicted** property.| No| Yes
+|**HotspareType**|RedfishCS_char| String pointer to **HotspareType** property.| No| Yes
+|**Id**|RedfishCS_char| String pointer to **Id** property.| Yes| No
+|**Identifiers**|RedfishResource_V1_1_0_Identifier_CS| Structure points to **Identifiers** property.| No| Yes
+|**IndicatorLED**|RedfishCS_char| String pointer to **IndicatorLED** property.| No| No
+|**Links**|RedfishDrive_V1_1_0_Drive_Links_CS| Structure points to **Links** property.| No| Yes
+|**Location**|RedfishResource_V1_1_0_Location_CS| Structure points to **Location** property.| No| Yes
+|**Manufacturer**|RedfishCS_char| String pointer to **Manufacturer** property.| No| Yes
+|**MediaType**|RedfishCS_char| String pointer to **MediaType** property.| No| Yes
+|**Model**|RedfishCS_char| String pointer to **Model** property.| No| Yes
+|**Name**|RedfishCS_char| String pointer to **Name** property.| Yes| No
+|**NegotiatedSpeedGbs**|RedfishCS_int64| 64-bit long long interger pointer to **NegotiatedSpeedGbs** property.| No| Yes
+|**Oem**|RedfishResource_Oem_CS| Structure points to **Oem** property.| No| No
+|**Operations**|RedfishVolume_V1_0_0_Operations_CS| Structure points to **Operations** property.| No| Yes
+|**PartNumber**|RedfishCS_char| String pointer to **PartNumber** property.| No| Yes
+|**PredictedMediaLifeLeftPercent**|RedfishCS_int64| 64-bit long long interger pointer to **PredictedMediaLifeLeftPercent** property.| No| Yes
+|**Protocol**|RedfishCS_char| String pointer to **Protocol** property.| No| Yes
+|**Revision**|RedfishCS_char| String pointer to **Revision** property.| No| Yes
+|**RotationSpeedRPM**|RedfishCS_int64| 64-bit long long interger pointer to **RotationSpeedRPM** property.| No| Yes
+|**SKU**|RedfishCS_char| String pointer to **SKU** property.| No| Yes
+|**SerialNumber**|RedfishCS_char| String pointer to **SerialNumber** property.| No| Yes
+|**Status**|RedfishResource_Status_CS| Structure points to **Status** property.| No| No
+|**StatusIndicator**|RedfishCS_char| String pointer to **StatusIndicator** property.| No| No
+## Redfish Drive V1_1_0 to C Structure Function
+    RedfishCS_status
+    Json_Drive_V1_1_0_To_CS (RedfishCS_char *JsonRawText, RedfishDrive_V1_1_0_Drive_CS **ReturnedCS);
+
+## C Structure to Redfish Drive V1_1_0 JSON Function
+    RedfishCS_status
+    CS_To_Drive_V1_1_0_JSON (RedfishDrive_V1_1_0_Drive_CS *CSPtr, RedfishCS_char **JsonText);
+
+## Destory Redfish Drive V1_1_0 C Structure Function
+    RedfishCS_status
+    DestroyDrive_V1_1_0_CS (RedfishDrive_V1_1_0_Drive_CS *CSPtr);
+

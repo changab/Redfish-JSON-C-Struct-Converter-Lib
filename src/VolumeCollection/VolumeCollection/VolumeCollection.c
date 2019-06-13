@@ -1,5 +1,5 @@
 //
-//  (C) Copyright 2018 Hewlett Packard Enterprise Development LP<BR>
+//  (C) Copyright 2018-2019 Hewlett Packard Enterprise Development LP<BR>
 //
 
 #include"Redfish_VolumeCollection_CS.h"
@@ -27,6 +27,9 @@ RedfishCS_status InsertJsonLinkArrayObj (json_t *JsonObj, char *Key, RedfishCS_L
 RedfishCS_status InsertJsonInt64ArrayObj (json_t *ParentJsonObj, char *Key, RedfishCS_int64_Array *Int64ValueArray);
 RedfishCS_status InsertJsonBoolArrayObj (json_t *ParentJsonObj, char *Key, RedfishCS_bool_Array *BoolValueArray);
 RedfishCS_status InsertJsonVagueObj (json_t *ParentJsonObj, char *Key, RedfishCS_Vague *VagueValue);
+RedfishCS_bool CheckEmptyPropJsonObject(json_t *JsonObj, RedfishCS_uint32 *NumOfProperty);
+RedfishCS_status CreateEmptyPropCsJson(RedfishCS_void *Cs, json_t *JsonOj, RedfishCS_char *NodeName, RedfishCS_char *ParentUri, RedfishCS_Type_EmptyProp_CS_Data **CsTypeEmptyPropCS, RedfishCS_uint32 NunmOfProperties);
+RedfishCS_status CsEmptyPropLinkToJson(json_t *CsJson, char *Key, RedfishCS_Link *Link);
 
 //
 //Generate C structure for Oem
@@ -35,6 +38,8 @@ static RedfishCS_status GenOemCs(RedfishVolumeCollection_VolumeCollection_CS *Cs
 {
   RedfishCS_status Status;
   RedfishCS_Type_JSON_Data *CsTypeJson;
+  RedfishCS_Type_EmptyProp_CS_Data *CsTypeEmptyPropCS;
+  RedfishCS_uint32 NunmOfEmptyPropProperties;
   json_t *TempJsonObj;
 
   Status = RedfishCS_status_success;
@@ -47,11 +52,25 @@ static RedfishCS_status GenOemCs(RedfishVolumeCollection_VolumeCollection_CS *Cs
     goto Error;
   }
   InitializeLinkHead (&(*Dst)->Prop);
-  Status = CreateCsJsonByNode (Cs, JsonObj, Key, Cs->Header.ThisUri, &CsTypeJson);
-  if (Status != RedfishCS_status_success) {
-    goto Error;
+
+  //
+  // Try to create C structure if the property is
+  // declared as empty property in schema. The supported property type
+  // is string, integer, real, number and boolean.
+  //
+  if (CheckEmptyPropJsonObject(TempJsonObj, &NunmOfEmptyPropProperties)) {
+    Status = CreateEmptyPropCsJson(Cs, JsonObj, Key, Cs->Header.ThisUri, &CsTypeEmptyPropCS, NunmOfEmptyPropProperties);
+    if (Status != RedfishCS_status_success) {
+      goto Error;
+    }
+    InsertTailLink(&(*Dst)->Prop, &CsTypeEmptyPropCS->Header.LinkEntry);
+  } else {
+    Status = CreateCsJsonByNode (Cs, JsonObj, Key, Cs->Header.ThisUri, &CsTypeJson);
+    if (Status != RedfishCS_status_success) {
+      goto Error;
+    }
+    InsertTailLink(&(*Dst)->Prop, &CsTypeJson->Header.LinkEntry);
   }
-  InsertTailLink(&(*Dst)->Prop, &CsTypeJson->Header.LinkEntry);
 Error:;
   return Status;
 }
@@ -60,6 +79,8 @@ static RedfishCS_status CS_To_JSON_Oem(json_t *CsJson, char *Key, RedfishResourc
   if (CSPtr == NULL) {
     return RedfishCS_status_success;
   }
+  // Check if this is RedfishCS_Type_CS_EmptyProp.
+  CsEmptyPropLinkToJson(CsJson, Key, &CSPtr->Prop);
   // No JSON property for this structure.
   return RedfishCS_status_success;
 }
@@ -87,8 +108,8 @@ RedfishCS_status CS_To_VolumeCollection_JSON(RedfishVolumeCollection_VolumeColle
   // Members@odata.count 
   if (InsertJsonInt64Obj (CsJson, "Members@odata.count", CSPtr->Membersodata_count) != RedfishCS_status_success) {goto Error;}
 
-  // Members@odata.navigationLink 
-  if (InsertJsonStringObj (CsJson, "Members@odata.navigationLink", CSPtr->Membersodata_navigationLink) != RedfishCS_status_success) {goto Error;}
+  // Members@odata.nextLink 
+  if (InsertJsonStringObj (CsJson, "Members@odata.nextLink", CSPtr->Membersodata_nextLink) != RedfishCS_status_success) {goto Error;}
 
   // Name 
   if (InsertJsonStringObj (CsJson, "Name", CSPtr->Name) != RedfishCS_status_success) {goto Error;}
@@ -98,6 +119,9 @@ RedfishCS_status CS_To_VolumeCollection_JSON(RedfishVolumeCollection_VolumeColle
 
   // @odata.context 
   if (InsertJsonStringObj (CsJson, "@odata.context", CSPtr->odata_context) != RedfishCS_status_success) {goto Error;}
+
+  // @odata.etag 
+  if (InsertJsonStringObj (CsJson, "@odata.etag", CSPtr->odata_etag) != RedfishCS_status_success) {goto Error;}
 
   // @odata.id 
   if (InsertJsonStringObj (CsJson, "@odata.id", CSPtr->odata_id) != RedfishCS_status_success) {goto Error;}
@@ -153,10 +177,15 @@ Json_VolumeCollection_To_CS(RedfishCS_char *JsonRawText, RedfishVolumeCollection
   if (Status != RedfishCS_status_success && Status != RedfishCS_status_not_found) {goto Error;}
   else {if (Status == RedfishCS_status_not_found){/*This is not the required property.*/}}
 
+  // @odata.etag
+  Status = GetRedfishPropertyStr (Cs, JsonObj, "@odata.etag", &Cs->odata_etag);
+  if (Status != RedfishCS_status_success && Status != RedfishCS_status_not_found) {goto Error;}
+  else {if (Status == RedfishCS_status_not_found){/*This is not the required property.*/}}
+
   // @odata.id
   Status = GetRedfishPropertyStr (Cs, JsonObj, "@odata.id", &Cs->odata_id);
   if (Status != RedfishCS_status_success && Status != RedfishCS_status_not_found) {goto Error;}
-  else {if (Status == RedfishCS_status_not_found){/*This is not the required property.*/}}
+  else {if (Status == RedfishCS_status_not_found){goto Error;}}
 
   // @odata.type
   Status = GetRedfishPropertyStr (Cs, JsonObj, "@odata.type", &Cs->odata_type);
@@ -172,22 +201,22 @@ Json_VolumeCollection_To_CS(RedfishCS_char *JsonRawText, RedfishVolumeCollection
   InitializeLinkHead (&Cs->Members);
   Status = CreateCsUriOrJsonByNodeArray (Cs, JsonObj, "Members", Cs->Header.ThisUri, &Cs->Members);
   if (Status != RedfishCS_status_success && Status != RedfishCS_status_not_found) {goto Error;}
-  else {if (Status == RedfishCS_status_not_found){/*This is not the required property.*/}}
+  else {if (Status == RedfishCS_status_not_found){goto Error;}}
 
   // Members@odata.count
   Status = GetRedfishPropertyInt64 (Cs, JsonObj, "Members@odata.count", &Cs->Membersodata_count);
   if (Status != RedfishCS_status_success && Status != RedfishCS_status_not_found) {goto Error;}
   else {if (Status == RedfishCS_status_not_found){/*This is not the required property.*/}}
 
-  // Members@odata.navigationLink
-  Status = GetRedfishPropertyStr (Cs, JsonObj, "Members@odata.navigationLink", &Cs->Membersodata_navigationLink);
+  // Members@odata.nextLink
+  Status = GetRedfishPropertyStr (Cs, JsonObj, "Members@odata.nextLink", &Cs->Membersodata_nextLink);
   if (Status != RedfishCS_status_success && Status != RedfishCS_status_not_found) {goto Error;}
   else {if (Status == RedfishCS_status_not_found){/*This is not the required property.*/}}
 
   // Name
   Status = GetRedfishPropertyStr (Cs, JsonObj, "Name", &Cs->Name);
   if (Status != RedfishCS_status_success && Status != RedfishCS_status_not_found) {goto Error;}
-  else {if (Status == RedfishCS_status_not_found){/*This is not the required property.*/}}
+  else {if (Status == RedfishCS_status_not_found){goto Error;}}
 
   // Oem
   Status = GenOemCs (Cs, JsonObj, "Oem", &Cs->Oem);

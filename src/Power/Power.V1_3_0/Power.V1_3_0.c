@@ -1,5 +1,5 @@
 //
-//  (C) Copyright 2018 Hewlett Packard Enterprise Development LP<BR>
+//  (C) Copyright 2018-2019 Hewlett Packard Enterprise Development LP<BR>
 //
 
 #include"Redfish_Power_v1_3_0_CS.h"
@@ -27,6 +27,9 @@ RedfishCS_status InsertJsonLinkArrayObj (json_t *JsonObj, char *Key, RedfishCS_L
 RedfishCS_status InsertJsonInt64ArrayObj (json_t *ParentJsonObj, char *Key, RedfishCS_int64_Array *Int64ValueArray);
 RedfishCS_status InsertJsonBoolArrayObj (json_t *ParentJsonObj, char *Key, RedfishCS_bool_Array *BoolValueArray);
 RedfishCS_status InsertJsonVagueObj (json_t *ParentJsonObj, char *Key, RedfishCS_Vague *VagueValue);
+RedfishCS_bool CheckEmptyPropJsonObject(json_t *JsonObj, RedfishCS_uint32 *NumOfProperty);
+RedfishCS_status CreateEmptyPropCsJson(RedfishCS_void *Cs, json_t *JsonOj, RedfishCS_char *NodeName, RedfishCS_char *ParentUri, RedfishCS_Type_EmptyProp_CS_Data **CsTypeEmptyPropCS, RedfishCS_uint32 NunmOfProperties);
+RedfishCS_status CsEmptyPropLinkToJson(json_t *CsJson, char *Key, RedfishCS_Link *Link);
 
 static RedfishCS_status GenOemCs(RedfishPower_V1_3_0_Power_CS *Cs, json_t *JsonObj, char *Key, RedfishResource_Oem_CS **Dst);
 static RedfishCS_status GenidRef_ArrayCs(RedfishPower_V1_3_0_Power_CS *Cs, json_t *JsonObj, char *Key, Redfishodata_V4_0_0_idRef_Array_CS **Dst);
@@ -38,6 +41,8 @@ static RedfishCS_status GenActions_OemCs(RedfishPower_V1_3_0_Power_CS *Cs, json_
 {
   RedfishCS_status Status;
   RedfishCS_Type_JSON_Data *CsTypeJson;
+  RedfishCS_Type_EmptyProp_CS_Data *CsTypeEmptyPropCS;
+  RedfishCS_uint32 NunmOfEmptyPropProperties;
   json_t *TempJsonObj;
 
   Status = RedfishCS_status_success;
@@ -50,11 +55,25 @@ static RedfishCS_status GenActions_OemCs(RedfishPower_V1_3_0_Power_CS *Cs, json_
     goto Error;
   }
   InitializeLinkHead (&(*Dst)->Prop);
-  Status = CreateCsJsonByNode (Cs, JsonObj, Key, Cs->Header.ThisUri, &CsTypeJson);
-  if (Status != RedfishCS_status_success) {
-    goto Error;
+
+  //
+  // Try to create C structure if the property is
+  // declared as empty property in schema. The supported property type
+  // is string, integer, real, number and boolean.
+  //
+  if (CheckEmptyPropJsonObject(TempJsonObj, &NunmOfEmptyPropProperties)) {
+    Status = CreateEmptyPropCsJson(Cs, JsonObj, Key, Cs->Header.ThisUri, &CsTypeEmptyPropCS, NunmOfEmptyPropProperties);
+    if (Status != RedfishCS_status_success) {
+      goto Error;
+    }
+    InsertTailLink(&(*Dst)->Prop, &CsTypeEmptyPropCS->Header.LinkEntry);
+  } else {
+    Status = CreateCsJsonByNode (Cs, JsonObj, Key, Cs->Header.ThisUri, &CsTypeJson);
+    if (Status != RedfishCS_status_success) {
+      goto Error;
+    }
+    InsertTailLink(&(*Dst)->Prop, &CsTypeJson->Header.LinkEntry);
   }
-  InsertTailLink(&(*Dst)->Prop, &CsTypeJson->Header.LinkEntry);
 Error:;
   return Status;
 }
@@ -90,6 +109,8 @@ static RedfishCS_status GenOemCs(RedfishPower_V1_3_0_Power_CS *Cs, json_t *JsonO
 {
   RedfishCS_status Status;
   RedfishCS_Type_JSON_Data *CsTypeJson;
+  RedfishCS_Type_EmptyProp_CS_Data *CsTypeEmptyPropCS;
+  RedfishCS_uint32 NunmOfEmptyPropProperties;
   json_t *TempJsonObj;
 
   Status = RedfishCS_status_success;
@@ -102,11 +123,25 @@ static RedfishCS_status GenOemCs(RedfishPower_V1_3_0_Power_CS *Cs, json_t *JsonO
     goto Error;
   }
   InitializeLinkHead (&(*Dst)->Prop);
-  Status = CreateCsJsonByNode (Cs, JsonObj, Key, Cs->Header.ThisUri, &CsTypeJson);
-  if (Status != RedfishCS_status_success) {
-    goto Error;
+
+  //
+  // Try to create C structure if the property is
+  // declared as empty property in schema. The supported property type
+  // is string, integer, real, number and boolean.
+  //
+  if (CheckEmptyPropJsonObject(TempJsonObj, &NunmOfEmptyPropProperties)) {
+    Status = CreateEmptyPropCsJson(Cs, JsonObj, Key, Cs->Header.ThisUri, &CsTypeEmptyPropCS, NunmOfEmptyPropProperties);
+    if (Status != RedfishCS_status_success) {
+      goto Error;
+    }
+    InsertTailLink(&(*Dst)->Prop, &CsTypeEmptyPropCS->Header.LinkEntry);
+  } else {
+    Status = CreateCsJsonByNode (Cs, JsonObj, Key, Cs->Header.ThisUri, &CsTypeJson);
+    if (Status != RedfishCS_status_success) {
+      goto Error;
+    }
+    InsertTailLink(&(*Dst)->Prop, &CsTypeJson->Header.LinkEntry);
   }
-  InsertTailLink(&(*Dst)->Prop, &CsTypeJson->Header.LinkEntry);
 Error:;
   return Status;
 }
@@ -117,6 +152,8 @@ static RedfishCS_status GenPowerControlOemActionsCs(RedfishPower_V1_3_0_Power_CS
 {
   RedfishCS_status Status;
   RedfishCS_Type_JSON_Data *CsTypeJson;
+  RedfishCS_Type_EmptyProp_CS_Data *CsTypeEmptyPropCS;
+  RedfishCS_uint32 NunmOfEmptyPropProperties;
   json_t *TempJsonObj;
 
   Status = RedfishCS_status_success;
@@ -129,11 +166,25 @@ static RedfishCS_status GenPowerControlOemActionsCs(RedfishPower_V1_3_0_Power_CS
     goto Error;
   }
   InitializeLinkHead (&(*Dst)->Prop);
-  Status = CreateCsJsonByNode (Cs, JsonObj, Key, Cs->Header.ThisUri, &CsTypeJson);
-  if (Status != RedfishCS_status_success) {
-    goto Error;
+
+  //
+  // Try to create C structure if the property is
+  // declared as empty property in schema. The supported property type
+  // is string, integer, real, number and boolean.
+  //
+  if (CheckEmptyPropJsonObject(TempJsonObj, &NunmOfEmptyPropProperties)) {
+    Status = CreateEmptyPropCsJson(Cs, JsonObj, Key, Cs->Header.ThisUri, &CsTypeEmptyPropCS, NunmOfEmptyPropProperties);
+    if (Status != RedfishCS_status_success) {
+      goto Error;
+    }
+    InsertTailLink(&(*Dst)->Prop, &CsTypeEmptyPropCS->Header.LinkEntry);
+  } else {
+    Status = CreateCsJsonByNode (Cs, JsonObj, Key, Cs->Header.ThisUri, &CsTypeJson);
+    if (Status != RedfishCS_status_success) {
+      goto Error;
+    }
+    InsertTailLink(&(*Dst)->Prop, &CsTypeJson->Header.LinkEntry);
   }
-  InsertTailLink(&(*Dst)->Prop, &CsTypeJson->Header.LinkEntry);
 Error:;
   return Status;
 }
@@ -482,6 +533,8 @@ static RedfishCS_status GenPowerSupplyOemActionsCs(RedfishPower_V1_3_0_Power_CS 
 {
   RedfishCS_status Status;
   RedfishCS_Type_JSON_Data *CsTypeJson;
+  RedfishCS_Type_EmptyProp_CS_Data *CsTypeEmptyPropCS;
+  RedfishCS_uint32 NunmOfEmptyPropProperties;
   json_t *TempJsonObj;
 
   Status = RedfishCS_status_success;
@@ -494,11 +547,25 @@ static RedfishCS_status GenPowerSupplyOemActionsCs(RedfishPower_V1_3_0_Power_CS 
     goto Error;
   }
   InitializeLinkHead (&(*Dst)->Prop);
-  Status = CreateCsJsonByNode (Cs, JsonObj, Key, Cs->Header.ThisUri, &CsTypeJson);
-  if (Status != RedfishCS_status_success) {
-    goto Error;
+
+  //
+  // Try to create C structure if the property is
+  // declared as empty property in schema. The supported property type
+  // is string, integer, real, number and boolean.
+  //
+  if (CheckEmptyPropJsonObject(TempJsonObj, &NunmOfEmptyPropProperties)) {
+    Status = CreateEmptyPropCsJson(Cs, JsonObj, Key, Cs->Header.ThisUri, &CsTypeEmptyPropCS, NunmOfEmptyPropProperties);
+    if (Status != RedfishCS_status_success) {
+      goto Error;
+    }
+    InsertTailLink(&(*Dst)->Prop, &CsTypeEmptyPropCS->Header.LinkEntry);
+  } else {
+    Status = CreateCsJsonByNode (Cs, JsonObj, Key, Cs->Header.ThisUri, &CsTypeJson);
+    if (Status != RedfishCS_status_success) {
+      goto Error;
+    }
+    InsertTailLink(&(*Dst)->Prop, &CsTypeJson->Header.LinkEntry);
   }
-  InsertTailLink(&(*Dst)->Prop, &CsTypeJson->Header.LinkEntry);
 Error:;
   return Status;
 }
@@ -808,6 +875,8 @@ static RedfishCS_status GenVoltageOemActionsCs(RedfishPower_V1_3_0_Power_CS *Cs,
 {
   RedfishCS_status Status;
   RedfishCS_Type_JSON_Data *CsTypeJson;
+  RedfishCS_Type_EmptyProp_CS_Data *CsTypeEmptyPropCS;
+  RedfishCS_uint32 NunmOfEmptyPropProperties;
   json_t *TempJsonObj;
 
   Status = RedfishCS_status_success;
@@ -820,11 +889,25 @@ static RedfishCS_status GenVoltageOemActionsCs(RedfishPower_V1_3_0_Power_CS *Cs,
     goto Error;
   }
   InitializeLinkHead (&(*Dst)->Prop);
-  Status = CreateCsJsonByNode (Cs, JsonObj, Key, Cs->Header.ThisUri, &CsTypeJson);
-  if (Status != RedfishCS_status_success) {
-    goto Error;
+
+  //
+  // Try to create C structure if the property is
+  // declared as empty property in schema. The supported property type
+  // is string, integer, real, number and boolean.
+  //
+  if (CheckEmptyPropJsonObject(TempJsonObj, &NunmOfEmptyPropProperties)) {
+    Status = CreateEmptyPropCsJson(Cs, JsonObj, Key, Cs->Header.ThisUri, &CsTypeEmptyPropCS, NunmOfEmptyPropProperties);
+    if (Status != RedfishCS_status_success) {
+      goto Error;
+    }
+    InsertTailLink(&(*Dst)->Prop, &CsTypeEmptyPropCS->Header.LinkEntry);
+  } else {
+    Status = CreateCsJsonByNode (Cs, JsonObj, Key, Cs->Header.ThisUri, &CsTypeJson);
+    if (Status != RedfishCS_status_success) {
+      goto Error;
+    }
+    InsertTailLink(&(*Dst)->Prop, &CsTypeJson->Header.LinkEntry);
   }
-  InsertTailLink(&(*Dst)->Prop, &CsTypeJson->Header.LinkEntry);
 Error:;
   return Status;
 }
@@ -1013,6 +1096,8 @@ static RedfishCS_status CS_To_JSON_ActionsOem(json_t *CsJson, char *Key, Redfish
   if (CSPtr == NULL) {
     return RedfishCS_status_success;
   }
+  // Check if this is RedfishCS_Type_CS_EmptyProp.
+  CsEmptyPropLinkToJson(CsJson, Key, &CSPtr->Prop);
   // No JSON property for this structure.
   return RedfishCS_status_success;
 }
@@ -1033,6 +1118,8 @@ static RedfishCS_status CS_To_JSON_Oem(json_t *CsJson, char *Key, RedfishResourc
   if (CSPtr == NULL) {
     return RedfishCS_status_success;
   }
+  // Check if this is RedfishCS_Type_CS_EmptyProp.
+  CsEmptyPropLinkToJson(CsJson, Key, &CSPtr->Prop);
   // No JSON property for this structure.
   return RedfishCS_status_success;
 }
@@ -1041,6 +1128,8 @@ static RedfishCS_status CS_To_JSON_PowerControlActionsOem(json_t *CsJson, char *
   if (CSPtr == NULL) {
     return RedfishCS_status_success;
   }
+  // Check if this is RedfishCS_Type_CS_EmptyProp.
+  CsEmptyPropLinkToJson(CsJson, Key, &CSPtr->Prop);
   // No JSON property for this structure.
   return RedfishCS_status_success;
 }
@@ -1061,6 +1150,8 @@ static RedfishCS_status CS_To_JSON_PowerControlOem(json_t *CsJson, char *Key, Re
   if (CSPtr == NULL) {
     return RedfishCS_status_success;
   }
+  // Check if this is RedfishCS_Type_CS_EmptyProp.
+  CsEmptyPropLinkToJson(CsJson, Key, &CSPtr->Prop);
   // No JSON property for this structure.
   return RedfishCS_status_success;
 }
@@ -1105,6 +1196,45 @@ Error:;
 }
 static RedfishCS_status CS_To_JSON_PowerControlRelatedItem(json_t *CsJson, char *Key, Redfishodata_V4_0_0_idRef_Array_CS *CSPtr)
 {
+  json_t *ArrayJson;
+  json_t *ArrayMember;
+  Redfishodata_V4_0_0_idRef_Array_CS *NextArray;
+  Redfishodata_V4_0_0_idRef_CS *NextArrayItem;
+
+  if (CSPtr == NULL) {
+    return RedfishCS_status_success;
+  }
+  ArrayJson = json_array();
+  if (ArrayJson == NULL) {
+    return RedfishCS_status_unsupported;
+  }
+  NextArray = CSPtr;
+  do {
+    ArrayMember = json_object();
+    if (ArrayMember == NULL) {
+      return RedfishCS_status_unsupported;
+    }
+
+    NextArrayItem = NextArray->ArrayValue;
+    // @odata.id 
+    if (InsertJsonStringObj (ArrayMember, "@odata.id", NextArrayItem->odata_id) != RedfishCS_status_success) {goto Error;}
+
+    if (json_array_append_new (ArrayJson, ArrayMember) != 0) {goto Error;}
+    NextArray = NextArray->Next;
+  } while (NextArray != NULL);
+  json_object_set_new (CsJson, Key, ArrayJson);
+
+  return RedfishCS_status_success;
+Error:;
+  return RedfishCS_status_unsupported;
+}
+static RedfishCS_status CS_To_JSON_PowerControlStatusOem(json_t *CsJson, char *Key, RedfishResource_Oem_CS *CSPtr)
+{
+  if (CSPtr == NULL) {
+    return RedfishCS_status_success;
+  }
+  // Check if this is RedfishCS_Type_CS_EmptyProp.
+  CsEmptyPropLinkToJson(CsJson, Key, &CSPtr->Prop);
   // No JSON property for this structure.
   return RedfishCS_status_success;
 }
@@ -1113,8 +1243,21 @@ static RedfishCS_status CS_To_JSON_PowerControlStatus(json_t *CsJson, char *Key,
   if (CSPtr == NULL) {
     return RedfishCS_status_success;
   }
-  // No JSON property for this structure.
+  // Health 
+  if (InsertJsonStringObj (CsJson, "Health", CSPtr->Health) != RedfishCS_status_success) {goto Error;}
+
+  // HealthRollup 
+  if (InsertJsonStringObj (CsJson, "HealthRollup", CSPtr->HealthRollup) != RedfishCS_status_success) {goto Error;}
+
+  // Oem
+  if (CS_To_JSON_PowerControlStatusOem(CsJson, "Oem", CSPtr->Oem) != RedfishCS_status_success) {goto Error;}
+
+  // State 
+  if (InsertJsonStringObj (CsJson, "State", CSPtr->State) != RedfishCS_status_success) {goto Error;}
+
   return RedfishCS_status_success;
+Error:;
+  return RedfishCS_status_unsupported;
 }
 static RedfishCS_status CS_To_JSON_PowerControl(json_t *CsJson, char *Key, RedfishPower_V1_3_0_PowerControl_Array_CS *CSPtr)
 {
@@ -1197,6 +1340,8 @@ static RedfishCS_status CS_To_JSON_PowerSuppliesActionsOem(json_t *CsJson, char 
   if (CSPtr == NULL) {
     return RedfishCS_status_success;
   }
+  // Check if this is RedfishCS_Type_CS_EmptyProp.
+  CsEmptyPropLinkToJson(CsJson, Key, &CSPtr->Prop);
   // No JSON property for this structure.
   return RedfishCS_status_success;
 }
@@ -1217,6 +1362,8 @@ static RedfishCS_status CS_To_JSON_PowerSuppliesInputRangesOem(json_t *CsJson, c
   if (CSPtr == NULL) {
     return RedfishCS_status_success;
   }
+  // Check if this is RedfishCS_Type_CS_EmptyProp.
+  CsEmptyPropLinkToJson(CsJson, Key, &CSPtr->Prop);
   // No JSON property for this structure.
   return RedfishCS_status_success;
 }
@@ -1277,11 +1424,52 @@ static RedfishCS_status CS_To_JSON_PowerSuppliesOem(json_t *CsJson, char *Key, R
   if (CSPtr == NULL) {
     return RedfishCS_status_success;
   }
+  // Check if this is RedfishCS_Type_CS_EmptyProp.
+  CsEmptyPropLinkToJson(CsJson, Key, &CSPtr->Prop);
   // No JSON property for this structure.
   return RedfishCS_status_success;
 }
 static RedfishCS_status CS_To_JSON_PowerSuppliesRelatedItem(json_t *CsJson, char *Key, Redfishodata_V4_0_0_idRef_Array_CS *CSPtr)
 {
+  json_t *ArrayJson;
+  json_t *ArrayMember;
+  Redfishodata_V4_0_0_idRef_Array_CS *NextArray;
+  Redfishodata_V4_0_0_idRef_CS *NextArrayItem;
+
+  if (CSPtr == NULL) {
+    return RedfishCS_status_success;
+  }
+  ArrayJson = json_array();
+  if (ArrayJson == NULL) {
+    return RedfishCS_status_unsupported;
+  }
+  NextArray = CSPtr;
+  do {
+    ArrayMember = json_object();
+    if (ArrayMember == NULL) {
+      return RedfishCS_status_unsupported;
+    }
+
+    NextArrayItem = NextArray->ArrayValue;
+    // @odata.id 
+    if (InsertJsonStringObj (ArrayMember, "@odata.id", NextArrayItem->odata_id) != RedfishCS_status_success) {goto Error;}
+
+    if (json_array_append_new (ArrayJson, ArrayMember) != 0) {goto Error;}
+    NextArray = NextArray->Next;
+  } while (NextArray != NULL);
+  json_object_set_new (CsJson, Key, ArrayJson);
+
+  return RedfishCS_status_success;
+Error:;
+  return RedfishCS_status_unsupported;
+}
+static RedfishCS_status CS_To_JSON_PowerSuppliesStatusOem(json_t *CsJson, char *Key, RedfishResource_Oem_CS *CSPtr)
+{
+  if (CSPtr == NULL) {
+    return RedfishCS_status_success;
+  }
+  // Check if this is RedfishCS_Type_CS_EmptyProp.
+  CsEmptyPropLinkToJson(CsJson, Key, &CSPtr->Prop);
   // No JSON property for this structure.
   return RedfishCS_status_success;
 }
@@ -1290,8 +1478,21 @@ static RedfishCS_status CS_To_JSON_PowerSuppliesStatus(json_t *CsJson, char *Key
   if (CSPtr == NULL) {
     return RedfishCS_status_success;
   }
-  // No JSON property for this structure.
+  // Health 
+  if (InsertJsonStringObj (CsJson, "Health", CSPtr->Health) != RedfishCS_status_success) {goto Error;}
+
+  // HealthRollup 
+  if (InsertJsonStringObj (CsJson, "HealthRollup", CSPtr->HealthRollup) != RedfishCS_status_success) {goto Error;}
+
+  // Oem
+  if (CS_To_JSON_PowerSuppliesStatusOem(CsJson, "Oem", CSPtr->Oem) != RedfishCS_status_success) {goto Error;}
+
+  // State 
+  if (InsertJsonStringObj (CsJson, "State", CSPtr->State) != RedfishCS_status_success) {goto Error;}
+
   return RedfishCS_status_success;
+Error:;
+  return RedfishCS_status_unsupported;
 }
 static RedfishCS_status CS_To_JSON_PowerSupplies(json_t *CsJson, char *Key, RedfishPower_V1_3_0_PowerSupply_Array_CS *CSPtr)
 {
@@ -1401,6 +1602,8 @@ static RedfishCS_status CS_To_JSON_VoltagesActionsOem(json_t *CsJson, char *Key,
   if (CSPtr == NULL) {
     return RedfishCS_status_success;
   }
+  // Check if this is RedfishCS_Type_CS_EmptyProp.
+  CsEmptyPropLinkToJson(CsJson, Key, &CSPtr->Prop);
   // No JSON property for this structure.
   return RedfishCS_status_success;
 }
@@ -1421,11 +1624,52 @@ static RedfishCS_status CS_To_JSON_VoltagesOem(json_t *CsJson, char *Key, Redfis
   if (CSPtr == NULL) {
     return RedfishCS_status_success;
   }
+  // Check if this is RedfishCS_Type_CS_EmptyProp.
+  CsEmptyPropLinkToJson(CsJson, Key, &CSPtr->Prop);
   // No JSON property for this structure.
   return RedfishCS_status_success;
 }
 static RedfishCS_status CS_To_JSON_VoltagesRelatedItem(json_t *CsJson, char *Key, Redfishodata_V4_0_0_idRef_Array_CS *CSPtr)
 {
+  json_t *ArrayJson;
+  json_t *ArrayMember;
+  Redfishodata_V4_0_0_idRef_Array_CS *NextArray;
+  Redfishodata_V4_0_0_idRef_CS *NextArrayItem;
+
+  if (CSPtr == NULL) {
+    return RedfishCS_status_success;
+  }
+  ArrayJson = json_array();
+  if (ArrayJson == NULL) {
+    return RedfishCS_status_unsupported;
+  }
+  NextArray = CSPtr;
+  do {
+    ArrayMember = json_object();
+    if (ArrayMember == NULL) {
+      return RedfishCS_status_unsupported;
+    }
+
+    NextArrayItem = NextArray->ArrayValue;
+    // @odata.id 
+    if (InsertJsonStringObj (ArrayMember, "@odata.id", NextArrayItem->odata_id) != RedfishCS_status_success) {goto Error;}
+
+    if (json_array_append_new (ArrayJson, ArrayMember) != 0) {goto Error;}
+    NextArray = NextArray->Next;
+  } while (NextArray != NULL);
+  json_object_set_new (CsJson, Key, ArrayJson);
+
+  return RedfishCS_status_success;
+Error:;
+  return RedfishCS_status_unsupported;
+}
+static RedfishCS_status CS_To_JSON_VoltagesStatusOem(json_t *CsJson, char *Key, RedfishResource_Oem_CS *CSPtr)
+{
+  if (CSPtr == NULL) {
+    return RedfishCS_status_success;
+  }
+  // Check if this is RedfishCS_Type_CS_EmptyProp.
+  CsEmptyPropLinkToJson(CsJson, Key, &CSPtr->Prop);
   // No JSON property for this structure.
   return RedfishCS_status_success;
 }
@@ -1434,8 +1678,21 @@ static RedfishCS_status CS_To_JSON_VoltagesStatus(json_t *CsJson, char *Key, Red
   if (CSPtr == NULL) {
     return RedfishCS_status_success;
   }
-  // No JSON property for this structure.
+  // Health 
+  if (InsertJsonStringObj (CsJson, "Health", CSPtr->Health) != RedfishCS_status_success) {goto Error;}
+
+  // HealthRollup 
+  if (InsertJsonStringObj (CsJson, "HealthRollup", CSPtr->HealthRollup) != RedfishCS_status_success) {goto Error;}
+
+  // Oem
+  if (CS_To_JSON_VoltagesStatusOem(CsJson, "Oem", CSPtr->Oem) != RedfishCS_status_success) {goto Error;}
+
+  // State 
+  if (InsertJsonStringObj (CsJson, "State", CSPtr->State) != RedfishCS_status_success) {goto Error;}
+
   return RedfishCS_status_success;
+Error:;
+  return RedfishCS_status_unsupported;
 }
 static RedfishCS_status CS_To_JSON_Voltages(json_t *CsJson, char *Key, RedfishPower_V1_3_0_Voltage_Array_CS *CSPtr)
 {

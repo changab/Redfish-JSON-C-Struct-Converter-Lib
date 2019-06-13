@@ -198,6 +198,30 @@
 |**Prop**|RedfishCS_Link| Structure link list to OEM defined property| ---| ---
 
 
+## RedfishAttributeRegistry_V1_2_0_AttributeValue_Array_CS
+    typedef struct _RedfishAttributeRegistry_V1_2_0_AttributeValue_Array_CS  {
+        RedfishCS_Link *Next;
+        RedfishAttributeRegistry_V1_2_0_AttributeValue_CS *ArrayValue;
+    } RedfishAttributeRegistry_V1_2_0_AttributeValue_Array_CS;
+
+
+
+## RedfishAttributeRegistry_V1_2_0_MapFrom_Array_CS
+    typedef struct _RedfishAttributeRegistry_V1_2_0_MapFrom_Array_CS  {
+        RedfishCS_Link *Next;
+        RedfishAttributeRegistry_V1_2_0_MapFrom_CS *ArrayValue;
+    } RedfishAttributeRegistry_V1_2_0_MapFrom_Array_CS;
+
+
+
+## RedfishAttributeRegistry_V1_2_0_Attributes_Array_CS
+    typedef struct _RedfishAttributeRegistry_V1_2_0_Attributes_Array_CS  {
+        RedfishCS_Link *Next;
+        RedfishAttributeRegistry_V1_2_0_Attributes_CS *ArrayValue;
+    } RedfishAttributeRegistry_V1_2_0_Attributes_Array_CS;
+
+
+
 ## RedfishAttributeRegistry_V1_2_0_Dependencies_Array_CS
     typedef struct _RedfishAttributeRegistry_V1_2_0_Dependencies_Array_CS  {
         RedfishCS_Link *Next;
@@ -211,30 +235,6 @@
         RedfishCS_Link *Next;
         RedfishAttributeRegistry_V1_2_0_Menus_CS *ArrayValue;
     } RedfishAttributeRegistry_V1_2_0_Menus_Array_CS;
-
-
-
-## RedfishAttributeRegistry_V1_2_0_MapFrom_Array_CS
-    typedef struct _RedfishAttributeRegistry_V1_2_0_MapFrom_Array_CS  {
-        RedfishCS_Link *Next;
-        RedfishAttributeRegistry_V1_2_0_MapFrom_CS *ArrayValue;
-    } RedfishAttributeRegistry_V1_2_0_MapFrom_Array_CS;
-
-
-
-## RedfishAttributeRegistry_V1_2_0_AttributeValue_Array_CS
-    typedef struct _RedfishAttributeRegistry_V1_2_0_AttributeValue_Array_CS  {
-        RedfishCS_Link *Next;
-        RedfishAttributeRegistry_V1_2_0_AttributeValue_CS *ArrayValue;
-    } RedfishAttributeRegistry_V1_2_0_AttributeValue_Array_CS;
-
-
-
-## RedfishAttributeRegistry_V1_2_0_Attributes_Array_CS
-    typedef struct _RedfishAttributeRegistry_V1_2_0_Attributes_Array_CS  {
-        RedfishCS_Link *Next;
-        RedfishAttributeRegistry_V1_2_0_Attributes_CS *ArrayValue;
-    } RedfishAttributeRegistry_V1_2_0_Attributes_Array_CS;
 
 
 

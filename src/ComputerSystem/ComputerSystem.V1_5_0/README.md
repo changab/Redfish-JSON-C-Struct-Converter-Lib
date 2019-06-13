@@ -230,19 +230,19 @@
 |**odata_id**|RedfishCS_char| String pointer to **@odata.id** property.| No| No
 
 
-## Redfishodata_V4_0_1_idRef_Array_CS
-    typedef struct _Redfishodata_V4_0_1_idRef_Array_CS  {
-        RedfishCS_Link *Next;
-        Redfishodata_V4_0_1_idRef_CS *ArrayValue;
-    } Redfishodata_V4_0_1_idRef_Array_CS;
-
-
-
 ## RedfishCS_char_Array
     typedef struct _RedfishCS_char_Array  {
         RedfishCS_Link *Next;
         RedfishCS_char *ArrayValue;
     } RedfishCS_char_Array;
+
+
+
+## Redfishodata_V4_0_1_idRef_Array_CS
+    typedef struct _Redfishodata_V4_0_1_idRef_Array_CS  {
+        RedfishCS_Link *Next;
+        Redfishodata_V4_0_1_idRef_CS *ArrayValue;
+    } Redfishodata_V4_0_1_idRef_Array_CS;
 
 
 

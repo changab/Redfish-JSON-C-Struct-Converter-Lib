@@ -1,5 +1,5 @@
 //
-//  (C) Copyright 2018 Hewlett Packard Enterprise Development LP<BR>
+//  (C) Copyright 2018-2019 Hewlett Packard Enterprise Development LP<BR>
 //
 
 #ifndef _RedfishEthernetinterface_V1_3_0_CSTRUCT_H_
@@ -10,13 +10,13 @@
 #ifndef __RedfishIPAddresses_V1_0_0_IPv4Address_Array_CS__
 typedef struct _RedfishIPAddresses_V1_0_0_IPv4Address_Array_CS RedfishIPAddresses_V1_0_0_IPv4Address_Array_CS;
 #endif
-#ifndef __RedfishIPAddresses_V1_0_0_IPv6StaticAddress_Array_CS__
-typedef struct _RedfishIPAddresses_V1_0_0_IPv6StaticAddress_Array_CS RedfishIPAddresses_V1_0_0_IPv6StaticAddress_Array_CS;
-#endif
+typedef struct _RedfishEthernetInterface_V1_3_0_IPv6AddressPolicyEntry_Array_CS RedfishEthernetInterface_V1_3_0_IPv6AddressPolicyEntry_Array_CS;
 #ifndef __RedfishIPAddresses_V1_0_0_IPv6Address_Array_CS__
 typedef struct _RedfishIPAddresses_V1_0_0_IPv6Address_Array_CS RedfishIPAddresses_V1_0_0_IPv6Address_Array_CS;
 #endif
-typedef struct _RedfishEthernetInterface_V1_3_0_IPv6AddressPolicyEntry_Array_CS RedfishEthernetInterface_V1_3_0_IPv6AddressPolicyEntry_Array_CS;
+#ifndef __RedfishIPAddresses_V1_0_0_IPv6StaticAddress_Array_CS__
+typedef struct _RedfishIPAddresses_V1_0_0_IPv6StaticAddress_Array_CS RedfishIPAddresses_V1_0_0_IPv6StaticAddress_Array_CS;
+#endif
 typedef struct _RedfishEthernetInterface_V1_3_0_EthernetInterface_CS RedfishEthernetInterface_V1_3_0_EthernetInterface_CS;
 typedef struct _RedfishEthernetInterface_V1_3_0_EthernetInterface_Actions_CS RedfishEthernetInterface_V1_3_0_EthernetInterface_Actions_CS;
 typedef struct _RedfishEthernetInterface_V1_3_0_EthernetInterface_Actions_Oem_CS RedfishEthernetInterface_V1_3_0_EthernetInterface_Actions_Oem_CS;
@@ -162,7 +162,7 @@ typedef struct _RedfishResource_Status_CS {
     RedfishCS_char            *HealthRollup;    // This represents the overall
                                                // health state from the view of
                                                // this resource.
-    RedfishResource_Oem_CS    *Oem;        
+    RedfishResource_Oem_CS    *Oem;            // Oem extension object.
     RedfishCS_char            *State;          // This indicates the known state
                                                // of the resource, such as if it
                                                // is enabled.
@@ -278,13 +278,10 @@ typedef struct _RedfishIPAddresses_V1_0_0_IPv4Address_Array_CS  {
 } RedfishIPAddresses_V1_0_0_IPv4Address_Array_CS;
 #endif
 
-#ifndef __RedfishIPAddresses_V1_0_0_IPv6StaticAddress_Array_CS__
-#define __RedfishIPAddresses_V1_0_0_IPv6StaticAddress_Array_CS__
-typedef struct _RedfishIPAddresses_V1_0_0_IPv6StaticAddress_Array_CS  {
-    RedfishIPAddresses_V1_0_0_IPv6StaticAddress_Array_CS    *Next;
-    RedfishIPAddresses_V1_0_0_IPv6StaticAddress_CS    *ArrayValue;
-} RedfishIPAddresses_V1_0_0_IPv6StaticAddress_Array_CS;
-#endif
+typedef struct _RedfishEthernetInterface_V1_3_0_IPv6AddressPolicyEntry_Array_CS  {
+    RedfishEthernetInterface_V1_3_0_IPv6AddressPolicyEntry_Array_CS    *Next;
+    RedfishEthernetInterface_V1_3_0_IPv6AddressPolicyEntry_CS    *ArrayValue;
+} RedfishEthernetInterface_V1_3_0_IPv6AddressPolicyEntry_Array_CS;
 
 #ifndef __RedfishIPAddresses_V1_0_0_IPv6Address_Array_CS__
 #define __RedfishIPAddresses_V1_0_0_IPv6Address_Array_CS__
@@ -294,10 +291,13 @@ typedef struct _RedfishIPAddresses_V1_0_0_IPv6Address_Array_CS  {
 } RedfishIPAddresses_V1_0_0_IPv6Address_Array_CS;
 #endif
 
-typedef struct _RedfishEthernetInterface_V1_3_0_IPv6AddressPolicyEntry_Array_CS  {
-    RedfishEthernetInterface_V1_3_0_IPv6AddressPolicyEntry_Array_CS    *Next;
-    RedfishEthernetInterface_V1_3_0_IPv6AddressPolicyEntry_CS    *ArrayValue;
-} RedfishEthernetInterface_V1_3_0_IPv6AddressPolicyEntry_Array_CS;
+#ifndef __RedfishIPAddresses_V1_0_0_IPv6StaticAddress_Array_CS__
+#define __RedfishIPAddresses_V1_0_0_IPv6StaticAddress_Array_CS__
+typedef struct _RedfishIPAddresses_V1_0_0_IPv6StaticAddress_Array_CS  {
+    RedfishIPAddresses_V1_0_0_IPv6StaticAddress_Array_CS    *Next;
+    RedfishIPAddresses_V1_0_0_IPv6StaticAddress_CS    *ArrayValue;
+} RedfishIPAddresses_V1_0_0_IPv6StaticAddress_Array_CS;
+#endif
 
 RedfishCS_status
 Json_EthernetInterface_V1_3_0_To_CS (char *JsonRawText, RedfishEthernetInterface_V1_3_0_EthernetInterface_CS **ReturnedCS);

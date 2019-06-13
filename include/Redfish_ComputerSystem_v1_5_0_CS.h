@@ -1,5 +1,5 @@
 //
-//  (C) Copyright 2018 Hewlett Packard Enterprise Development LP<BR>
+//  (C) Copyright 2018-2019 Hewlett Packard Enterprise Development LP<BR>
 //
 
 #ifndef _RedfishComputersystem_V1_5_0_CSTRUCT_H_
@@ -7,10 +7,10 @@
 
 #include "RedfishCsCommon.h"
 
-typedef struct _RedfishComputerSystem_V1_5_0_TrustedModules_Array_CS RedfishComputerSystem_V1_5_0_TrustedModules_Array_CS;
 #ifndef __Redfishodata_V4_0_1_idRef_Array_CS__
 typedef struct _Redfishodata_V4_0_1_idRef_Array_CS Redfishodata_V4_0_1_idRef_Array_CS;
 #endif
+typedef struct _RedfishComputerSystem_V1_5_0_TrustedModules_Array_CS RedfishComputerSystem_V1_5_0_TrustedModules_Array_CS;
 typedef struct _RedfishComputerSystem_V1_5_0_Actions_CS RedfishComputerSystem_V1_5_0_Actions_CS;
 typedef struct _RedfishComputerSystem_V1_5_0_Boot_CS RedfishComputerSystem_V1_5_0_Boot_CS;
 typedef struct _RedfishComputerSystem_V1_5_0_ComputerSystem_CS RedfishComputerSystem_V1_5_0_ComputerSystem_CS;
@@ -256,7 +256,7 @@ typedef struct _RedfishResource_Status_CS {
     RedfishCS_char            *HealthRollup;    // This represents the overall
                                                // health state from the view of
                                                // this resource.
-    RedfishResource_Oem_CS    *Oem;        
+    RedfishResource_Oem_CS    *Oem;            // Oem extension object.
     RedfishCS_char            *State;          // This indicates the known state
                                                // of the resource, such as if it
                                                // is enabled.
@@ -392,11 +392,6 @@ typedef struct _RedfishComputerSystem_V1_5_0_ComputerSystem_CS {
                                                                                          // system.
 } RedfishComputerSystem_V1_5_0_ComputerSystem_CS;
 
-typedef struct _RedfishComputerSystem_V1_5_0_TrustedModules_Array_CS  {
-    RedfishComputerSystem_V1_5_0_TrustedModules_Array_CS    *Next;
-    RedfishComputerSystem_V1_5_0_TrustedModules_CS    *ArrayValue;
-} RedfishComputerSystem_V1_5_0_TrustedModules_Array_CS;
-
 #ifndef __Redfishodata_V4_0_1_idRef_Array_CS__
 #define __Redfishodata_V4_0_1_idRef_Array_CS__
 typedef struct _Redfishodata_V4_0_1_idRef_Array_CS  {
@@ -404,6 +399,11 @@ typedef struct _Redfishodata_V4_0_1_idRef_Array_CS  {
     Redfishodata_V4_0_1_idRef_CS    *ArrayValue;
 } Redfishodata_V4_0_1_idRef_Array_CS;
 #endif
+
+typedef struct _RedfishComputerSystem_V1_5_0_TrustedModules_Array_CS  {
+    RedfishComputerSystem_V1_5_0_TrustedModules_Array_CS    *Next;
+    RedfishComputerSystem_V1_5_0_TrustedModules_CS    *ArrayValue;
+} RedfishComputerSystem_V1_5_0_TrustedModules_Array_CS;
 
 RedfishCS_status
 Json_ComputerSystem_V1_5_0_To_CS (char *JsonRawText, RedfishComputerSystem_V1_5_0_ComputerSystem_CS **ReturnedCS);

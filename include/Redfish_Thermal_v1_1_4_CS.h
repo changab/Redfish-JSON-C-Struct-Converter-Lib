@@ -1,5 +1,5 @@
 //
-//  (C) Copyright 2018 Hewlett Packard Enterprise Development LP<BR>
+//  (C) Copyright 2018-2019 Hewlett Packard Enterprise Development LP<BR>
 //
 
 #ifndef _RedfishThermal_V1_1_4_CSTRUCT_H_
@@ -50,7 +50,7 @@ typedef struct _RedfishResource_Status_CS {
     RedfishCS_char            *HealthRollup;    // This represents the overall
                                                // health state from the view of
                                                // this resource.
-    RedfishResource_Oem_CS    *Oem;        
+    RedfishResource_Oem_CS    *Oem;            // Oem extension object.
     RedfishCS_char            *State;          // This indicates the known state
                                                // of the resource, such as if it
                                                // is enabled.

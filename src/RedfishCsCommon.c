@@ -1,6 +1,6 @@
 /** @file
    
-  (C) Copyright 2018 Hewlett Packard Enterprise Development LP<BR>
+  (C) Copyright 2018-2019 Hewlett Packard Enterprise Development LP<BR>
   This software contains information confidential and proprietary to
   Hewlett Packard Enterprise. It shall not be reproduced in whole or in part,
   or transferred to other documents, or disclosed to third parties, or used
@@ -14,6 +14,8 @@
 #include <jansson.h>
 #include <stdlib.h>
 #include <string.h>
+
+RedfishCS_status GetRedfishPropertyVague(void *Cs, json_t *JsonObj, char *Key, RedfishCS_Vague **DstBuffer);
 
 RedfishCS_Link *InitializeLinkHead (RedfishCS_Link *ListHead)
 {
@@ -197,6 +199,97 @@ RedfishCS_status CreateCsJsonByNode (void *Cs, json_t *JsonObj, RedfishCS_char *
     return RedfishCS_status_success;     
   }
   return RedfishCS_status_invalid_parameter;
+}
+
+RedfishCS_status CreateEmptyPropCsJson(RedfishCS_void *Cs, json_t *JsonObj, RedfishCS_char *NodeName, RedfishCS_char *ParentUri, RedfishCS_Type_EmptyProp_CS_Data **CsTypeEmptyPropCSData, RedfishCS_uint32 NunmOfProperties) {
+  json_t *TempJsonObj;
+  RedfishCS_status Status;
+  RedfishCS_Type_EmptyProp_CS_Data *CsTypeEmptyPropCS;
+  RedfishCS_char *KeyName;
+  json_t *KeyValueObj;
+  RedfishCS_void *n;
+  RedfishCS_EmptyProp_KeyValue **KeyValuePtr;
+  RedfishCS_EmptyProp_KeyValue *KeyValue;
+
+  CsTypeEmptyPropCS = NULL;
+  if (NodeName != NULL) {
+    TempJsonObj = json_object_get(JsonObj, NodeName);
+    if (TempJsonObj == NULL) {
+      return RedfishCS_status_not_found;
+    }
+  }
+  Status = allocateRecordCsMemory(Cs, sizeof(RedfishCS_Type_EmptyProp_CS_Data), (void **)&CsTypeEmptyPropCS);
+  if (Status != RedfishCS_status_success) {
+    return Status;
+  }
+  InitializeLinkHead(&CsTypeEmptyPropCS->Header.LinkEntry);
+  CsTypeEmptyPropCS->Header.ResourceType = RedfishCS_Type_CS_EmptyProp;
+  CsTypeEmptyPropCS->Header.ThisUri = ParentUri;
+  Status = allocateDuplicateStr(Cs, NodeName, (void **)&CsTypeEmptyPropCS->Header.KeyName);
+  if (Status != RedfishCS_status_success) {
+    return Status;
+  }
+  CsTypeEmptyPropCS->NunmOfProperties = NunmOfProperties;
+  //
+  // Create instance for each key-value.
+  //
+  KeyValuePtr = &CsTypeEmptyPropCS->KeyValuePtr;
+  json_object_foreach_safe(TempJsonObj, n, KeyName, KeyValueObj) {
+    Status = allocateRecordCsMemory(Cs, sizeof(RedfishCS_EmptyProp_KeyValue), (void **)&KeyValue);
+    if (Status != RedfishCS_status_success) {
+      return Status;
+    }
+    Status = allocateDuplicateStr(Cs, KeyName, (void **)&KeyValue->KeyNamePtr);
+    if (Status != RedfishCS_status_success) {
+      return Status;
+    }
+    Status = GetRedfishPropertyVague(Cs, TempJsonObj, KeyName, &KeyValue->Value);
+    if (Status != RedfishCS_status_success) {
+      return Status;
+    }
+
+    *KeyValuePtr = KeyValue;
+    KeyValuePtr = &KeyValue->NextKeyValuePtr;
+  }
+
+  *CsTypeEmptyPropCSData = CsTypeEmptyPropCS;
+  return RedfishCS_status_success;
+}
+
+RedfishCS_bool CheckSupportedPropTypeInEmptyProperty(json_t *JsonObj) {
+  //
+  // Only support below property types for the property is declared as 
+  // empty property in schema.
+  //  e.g. "properties": {}
+  //
+  if (json_is_string(JsonObj) ||
+    json_is_integer(JsonObj) ||
+    //json_is_real(JsonObj) ||
+    json_is_number(JsonObj) ||
+    json_is_boolean(JsonObj)) {
+    return RedfishCS_boolean_true;
+  }
+  return RedfishCS_boolean_false;
+}
+
+RedfishCS_bool CheckEmptyPropJsonObject(json_t *JsonObj, RedfishCS_uint32 *NumOfProperty)
+{
+  RedfishCS_char *NewKey;
+  json_t *Value;
+  RedfishCS_void *n;
+  RedfishCS_uint32 Num;
+
+  Num = 0;
+  json_object_foreach_safe(JsonObj, n, NewKey, Value) {
+    if (!CheckSupportedPropTypeInEmptyProperty(Value)) {
+      return RedfishCS_boolean_false;
+    }
+    Num ++;
+  }
+  if (NumOfProperty != NULL) {
+    *NumOfProperty = Num;
+  }
+  return RedfishCS_boolean_true;
 }
 
 RedfishCS_bool SupportedRedfishResource (RedfishCS_char *Odata_Type, RedfishCS_char *NameSpace, RedfishCS_char *Version, RedfishCS_char *DataType)
@@ -448,14 +541,17 @@ RedfishCS_status GetRedfishPropertyVague (void *Cs, json_t *JsonObj, char *Key, 
 RedfishCS_status InsertJsonStringObj (json_t *ParentJsonObj, char *Key, RedfishCS_char *StringValue)
 {
   json_t  *JsonValue;
+  RedfishCS_char NullStr[] = "";
+  RedfishCS_char *InsertStr;
 
+  InsertStr = StringValue;
   if (ParentJsonObj == NULL) {
     return RedfishCS_status_invalid_parameter;
   }
-  if (StringValue == (char *)NULL) {
-    return RedfishCS_status_success; // No value for this key.
+  if (InsertStr == (char *)NULL) {
+    InsertStr = NullStr;
   }
-  JsonValue = json_string(StringValue);
+  JsonValue = json_string(InsertStr);
   if (JsonValue == NULL) {
     return RedfishCS_status_unsupported;
   }
@@ -508,6 +604,7 @@ RedfishCS_status InsertJsonInt64Obj (json_t *ParentJsonObj, char *Key, RedfishCS
 RedfishCS_status InsertJsonVagueObj (json_t *ParentJsonObj, char *Key, RedfishCS_Vague *VagueValue)
 {
   json_t *JsonValue;
+  RedfishCS_char NullStr[] = "";
 
   if (ParentJsonObj == NULL) {
     return RedfishCS_status_invalid_parameter;
@@ -515,7 +612,11 @@ RedfishCS_status InsertJsonVagueObj (json_t *ParentJsonObj, char *Key, RedfishCS
   if (VagueValue == (RedfishCS_Vague *)NULL) {
     JsonValue = json_null(); // No value for this key.
   } else if (VagueValue->DataType == RedfishCS_Vague_DataType_String) {
-    JsonValue = json_string(VagueValue->DataValue.CharPtr);
+    if (VagueValue->DataValue.CharPtr == NULL) {
+      JsonValue = json_string(NullStr);
+    } else {
+      JsonValue = json_string(VagueValue->DataValue.CharPtr);
+    }
   } else if (VagueValue->DataType == RedfishCS_Vague_DataType_Int64) {
     JsonValue = json_integer((json_int_t)*VagueValue->DataValue.Int64Ptr);
   } else if (VagueValue->DataType == RedfishCS_Vague_DataType_Bool) {
@@ -562,6 +663,7 @@ RedfishCS_status InsertJsonStringArrayObj (json_t *ParentJsonObj, char *Key, Red
   json_t *ArrayJson;
   json_t *ArrayMember;
   RedfishCS_char_Array *NextArray;
+  RedfishCS_char NullStr[] = "";
 
   if (ParentJsonObj == NULL) {
     return RedfishCS_status_invalid_parameter;
@@ -575,7 +677,11 @@ RedfishCS_status InsertJsonStringArrayObj (json_t *ParentJsonObj, char *Key, Red
   }
   NextArray = StringValueArray;
   do {
-    ArrayMember = json_string(NextArray->ArrayValue);
+    if (NextArray->ArrayValue == NULL) {
+      ArrayMember = json_string(NullStr);
+    } else {
+      ArrayMember = json_string(NextArray->ArrayValue);
+    }
     if (json_array_append_new (ArrayJson, ArrayMember) != 0) {
       return RedfishCS_status_unsupported;
     }
@@ -690,4 +796,30 @@ RedfishCS_status InsertJsonLinkArrayObj (json_t *ParentJsonObj, char *Key, Redfi
   return RedfishCS_status_success;
 }
 
+RedfishCS_status CsEmptyPropLinkToJson(json_t *ParentJsonObj, char *Key, RedfishCS_Link *Link) {
+  RedfishCS_uint32 Index;
+  RedfishCS_Type_EmptyProp_CS_Data *EmptyProp_CS_Ptr;
+  RedfishCS_EmptyProp_KeyValue *KeyValuePtr;
+  json_t *JsonObj;
+  RedfishCS_status Status;
+
+  EmptyProp_CS_Ptr = (RedfishCS_Type_EmptyProp_CS_Data *)GetFirstLink(Link);
+  if (EmptyProp_CS_Ptr->Header.ResourceType != RedfishCS_Type_CS_EmptyProp) {
+    return RedfishCS_status_unsupported;
+   }
+
+  JsonObj = json_object();
+  KeyValuePtr = EmptyProp_CS_Ptr->KeyValuePtr;
+  for (Index = 0; Index < EmptyProp_CS_Ptr->NunmOfProperties; Index++) {
+    Status = InsertJsonVagueObj(JsonObj, KeyValuePtr->KeyNamePtr, KeyValuePtr->Value);
+    if (Status != RedfishCS_status_success) {
+      return Status;
+    }
+    KeyValuePtr = KeyValuePtr->NextKeyValuePtr;
+  }
+  if (json_object_set_new(ParentJsonObj, Key, JsonObj) != 0) {
+    return RedfishCS_status_unknown_error;
+  }
+  return RedfishCS_status_success;
+}
 

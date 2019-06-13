@@ -1,5 +1,5 @@
 //
-//  (C) Copyright 2018 Hewlett Packard Enterprise Development LP<BR>
+//  (C) Copyright 2018-2019 Hewlett Packard Enterprise Development LP<BR>
 //
 
 #ifndef _RedfishAttributeregistry_V1_1_1_CSTRUCT_H_
@@ -7,11 +7,11 @@
 
 #include "RedfishCsCommon.h"
 
+typedef struct _RedfishAttributeRegistry_V1_1_1_AttributeValue_Array_CS RedfishAttributeRegistry_V1_1_1_AttributeValue_Array_CS;
+typedef struct _RedfishAttributeRegistry_V1_1_1_MapFrom_Array_CS RedfishAttributeRegistry_V1_1_1_MapFrom_Array_CS;
+typedef struct _RedfishAttributeRegistry_V1_1_1_Attributes_Array_CS RedfishAttributeRegistry_V1_1_1_Attributes_Array_CS;
 typedef struct _RedfishAttributeRegistry_V1_1_1_Dependencies_Array_CS RedfishAttributeRegistry_V1_1_1_Dependencies_Array_CS;
 typedef struct _RedfishAttributeRegistry_V1_1_1_Menus_Array_CS RedfishAttributeRegistry_V1_1_1_Menus_Array_CS;
-typedef struct _RedfishAttributeRegistry_V1_1_1_Attributes_Array_CS RedfishAttributeRegistry_V1_1_1_Attributes_Array_CS;
-typedef struct _RedfishAttributeRegistry_V1_1_1_MapFrom_Array_CS RedfishAttributeRegistry_V1_1_1_MapFrom_Array_CS;
-typedef struct _RedfishAttributeRegistry_V1_1_1_AttributeValue_Array_CS RedfishAttributeRegistry_V1_1_1_AttributeValue_Array_CS;
 typedef struct _RedfishAttributeRegistry_V1_1_1_SupportedSystems_Array_CS RedfishAttributeRegistry_V1_1_1_SupportedSystems_Array_CS;
 typedef struct _RedfishAttributeRegistry_V1_1_1_Actions_CS RedfishAttributeRegistry_V1_1_1_Actions_CS;
 typedef struct _RedfishAttributeRegistry_V1_1_1_AttributeRegistry_CS RedfishAttributeRegistry_V1_1_1_AttributeRegistry_CS;
@@ -281,6 +281,21 @@ typedef struct _RedfishAttributeRegistry_V1_1_1_AttributeRegistry_CS {
                                                                                       // this attribute registry.
 } RedfishAttributeRegistry_V1_1_1_AttributeRegistry_CS;
 
+typedef struct _RedfishAttributeRegistry_V1_1_1_AttributeValue_Array_CS  {
+    RedfishAttributeRegistry_V1_1_1_AttributeValue_Array_CS    *Next;
+    RedfishAttributeRegistry_V1_1_1_AttributeValue_CS    *ArrayValue;
+} RedfishAttributeRegistry_V1_1_1_AttributeValue_Array_CS;
+
+typedef struct _RedfishAttributeRegistry_V1_1_1_MapFrom_Array_CS  {
+    RedfishAttributeRegistry_V1_1_1_MapFrom_Array_CS    *Next;
+    RedfishAttributeRegistry_V1_1_1_MapFrom_CS    *ArrayValue;
+} RedfishAttributeRegistry_V1_1_1_MapFrom_Array_CS;
+
+typedef struct _RedfishAttributeRegistry_V1_1_1_Attributes_Array_CS  {
+    RedfishAttributeRegistry_V1_1_1_Attributes_Array_CS    *Next;
+    RedfishAttributeRegistry_V1_1_1_Attributes_CS    *ArrayValue;
+} RedfishAttributeRegistry_V1_1_1_Attributes_Array_CS;
+
 typedef struct _RedfishAttributeRegistry_V1_1_1_Dependencies_Array_CS  {
     RedfishAttributeRegistry_V1_1_1_Dependencies_Array_CS    *Next;
     RedfishAttributeRegistry_V1_1_1_Dependencies_CS    *ArrayValue;
@@ -290,21 +305,6 @@ typedef struct _RedfishAttributeRegistry_V1_1_1_Menus_Array_CS  {
     RedfishAttributeRegistry_V1_1_1_Menus_Array_CS    *Next;
     RedfishAttributeRegistry_V1_1_1_Menus_CS    *ArrayValue;
 } RedfishAttributeRegistry_V1_1_1_Menus_Array_CS;
-
-typedef struct _RedfishAttributeRegistry_V1_1_1_Attributes_Array_CS  {
-    RedfishAttributeRegistry_V1_1_1_Attributes_Array_CS    *Next;
-    RedfishAttributeRegistry_V1_1_1_Attributes_CS    *ArrayValue;
-} RedfishAttributeRegistry_V1_1_1_Attributes_Array_CS;
-
-typedef struct _RedfishAttributeRegistry_V1_1_1_MapFrom_Array_CS  {
-    RedfishAttributeRegistry_V1_1_1_MapFrom_Array_CS    *Next;
-    RedfishAttributeRegistry_V1_1_1_MapFrom_CS    *ArrayValue;
-} RedfishAttributeRegistry_V1_1_1_MapFrom_Array_CS;
-
-typedef struct _RedfishAttributeRegistry_V1_1_1_AttributeValue_Array_CS  {
-    RedfishAttributeRegistry_V1_1_1_AttributeValue_Array_CS    *Next;
-    RedfishAttributeRegistry_V1_1_1_AttributeValue_CS    *ArrayValue;
-} RedfishAttributeRegistry_V1_1_1_AttributeValue_Array_CS;
 
 typedef struct _RedfishAttributeRegistry_V1_1_1_SupportedSystems_Array_CS  {
     RedfishAttributeRegistry_V1_1_1_SupportedSystems_Array_CS    *Next;

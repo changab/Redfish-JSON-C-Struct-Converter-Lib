@@ -1,5 +1,5 @@
 //
-//  (C) Copyright 2018 Hewlett Packard Enterprise Development LP<BR>
+//  (C) Copyright 2018-2019 Hewlett Packard Enterprise Development LP<BR>
 //
 
 #ifndef _RedfishNetworkport_V1_0_0_CSTRUCT_H_
@@ -7,9 +7,9 @@
 
 #include "RedfishCsCommon.h"
 
-typedef struct _RedfishNetworkPort_V1_0_0_SupportedLinkCapabilities_Array_CS RedfishNetworkPort_V1_0_0_SupportedLinkCapabilities_Array_CS;
 typedef struct _RedfishNetworkPort_V1_0_0_NetDevFuncMaxBWAlloc_Array_CS RedfishNetworkPort_V1_0_0_NetDevFuncMaxBWAlloc_Array_CS;
 typedef struct _RedfishNetworkPort_V1_0_0_NetDevFuncMinBWAlloc_Array_CS RedfishNetworkPort_V1_0_0_NetDevFuncMinBWAlloc_Array_CS;
+typedef struct _RedfishNetworkPort_V1_0_0_SupportedLinkCapabilities_Array_CS RedfishNetworkPort_V1_0_0_SupportedLinkCapabilities_Array_CS;
 typedef struct _RedfishNetworkPort_V1_0_0_NetDevFuncMaxBWAlloc_CS RedfishNetworkPort_V1_0_0_NetDevFuncMaxBWAlloc_CS;
 typedef struct _RedfishNetworkPort_V1_0_0_NetDevFuncMinBWAlloc_CS RedfishNetworkPort_V1_0_0_NetDevFuncMinBWAlloc_CS;
 typedef struct _RedfishNetworkPort_V1_0_0_NetworkPort_CS RedfishNetworkPort_V1_0_0_NetworkPort_CS;
@@ -74,7 +74,7 @@ typedef struct _RedfishResource_Status_CS {
     RedfishCS_char            *HealthRollup;    // This represents the overall
                                                // health state from the view of
                                                // this resource.
-    RedfishResource_Oem_CS    *Oem;        
+    RedfishResource_Oem_CS    *Oem;            // Oem extension object.
     RedfishCS_char            *State;          // This indicates the known state
                                                // of the resource, such as if it
                                                // is enabled.
@@ -152,11 +152,6 @@ typedef struct _RedfishNetworkPort_V1_0_0_NetworkPort_CS {
                                                                                                       // enabled for this network port.
 } RedfishNetworkPort_V1_0_0_NetworkPort_CS;
 
-typedef struct _RedfishNetworkPort_V1_0_0_SupportedLinkCapabilities_Array_CS  {
-    RedfishNetworkPort_V1_0_0_SupportedLinkCapabilities_Array_CS    *Next;
-    RedfishNetworkPort_V1_0_0_SupportedLinkCapabilities_CS    *ArrayValue;
-} RedfishNetworkPort_V1_0_0_SupportedLinkCapabilities_Array_CS;
-
 typedef struct _RedfishNetworkPort_V1_0_0_NetDevFuncMaxBWAlloc_Array_CS  {
     RedfishNetworkPort_V1_0_0_NetDevFuncMaxBWAlloc_Array_CS    *Next;
     RedfishNetworkPort_V1_0_0_NetDevFuncMaxBWAlloc_CS    *ArrayValue;
@@ -166,6 +161,11 @@ typedef struct _RedfishNetworkPort_V1_0_0_NetDevFuncMinBWAlloc_Array_CS  {
     RedfishNetworkPort_V1_0_0_NetDevFuncMinBWAlloc_Array_CS    *Next;
     RedfishNetworkPort_V1_0_0_NetDevFuncMinBWAlloc_CS    *ArrayValue;
 } RedfishNetworkPort_V1_0_0_NetDevFuncMinBWAlloc_Array_CS;
+
+typedef struct _RedfishNetworkPort_V1_0_0_SupportedLinkCapabilities_Array_CS  {
+    RedfishNetworkPort_V1_0_0_SupportedLinkCapabilities_Array_CS    *Next;
+    RedfishNetworkPort_V1_0_0_SupportedLinkCapabilities_CS    *ArrayValue;
+} RedfishNetworkPort_V1_0_0_SupportedLinkCapabilities_Array_CS;
 
 RedfishCS_status
 Json_NetworkPort_V1_0_0_To_CS (char *JsonRawText, RedfishNetworkPort_V1_0_0_NetworkPort_CS **ReturnedCS);

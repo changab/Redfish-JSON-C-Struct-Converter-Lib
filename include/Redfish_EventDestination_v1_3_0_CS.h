@@ -1,5 +1,5 @@
 //
-//  (C) Copyright 2018 Hewlett Packard Enterprise Development LP<BR>
+//  (C) Copyright 2018-2019 Hewlett Packard Enterprise Development LP<BR>
 //
 
 #ifndef _RedfishEventdestination_V1_3_0_CSTRUCT_H_
@@ -7,10 +7,10 @@
 
 #include "RedfishCsCommon.h"
 
+typedef struct _RedfishEventDestination_V1_3_0_HttpHeaderProperty_Array_CS RedfishEventDestination_V1_3_0_HttpHeaderProperty_Array_CS;
 #ifndef __Redfishodata_V4_0_2_idRef_Array_CS__
 typedef struct _Redfishodata_V4_0_2_idRef_Array_CS Redfishodata_V4_0_2_idRef_Array_CS;
 #endif
-typedef struct _RedfishEventDestination_V1_3_0_HttpHeaderProperty_Array_CS RedfishEventDestination_V1_3_0_HttpHeaderProperty_Array_CS;
 typedef struct _RedfishEventDestination_V1_3_0_Actions_CS RedfishEventDestination_V1_3_0_Actions_CS;
 typedef struct _RedfishEventDestination_V1_3_0_EventDestination_CS RedfishEventDestination_V1_3_0_EventDestination_CS;
 typedef struct _RedfishEventDestination_V1_3_0_HttpHeaderProperty_CS RedfishEventDestination_V1_3_0_HttpHeaderProperty_CS;
@@ -119,6 +119,11 @@ typedef struct _RedfishEventDestination_V1_3_0_EventDestination_CS {
                                                                                                  // type for events.
 } RedfishEventDestination_V1_3_0_EventDestination_CS;
 
+typedef struct _RedfishEventDestination_V1_3_0_HttpHeaderProperty_Array_CS  {
+    RedfishEventDestination_V1_3_0_HttpHeaderProperty_Array_CS    *Next;
+    RedfishEventDestination_V1_3_0_HttpHeaderProperty_CS    *ArrayValue;
+} RedfishEventDestination_V1_3_0_HttpHeaderProperty_Array_CS;
+
 #ifndef __Redfishodata_V4_0_2_idRef_Array_CS__
 #define __Redfishodata_V4_0_2_idRef_Array_CS__
 typedef struct _Redfishodata_V4_0_2_idRef_Array_CS  {
@@ -126,11 +131,6 @@ typedef struct _Redfishodata_V4_0_2_idRef_Array_CS  {
     Redfishodata_V4_0_2_idRef_CS    *ArrayValue;
 } Redfishodata_V4_0_2_idRef_Array_CS;
 #endif
-
-typedef struct _RedfishEventDestination_V1_3_0_HttpHeaderProperty_Array_CS  {
-    RedfishEventDestination_V1_3_0_HttpHeaderProperty_Array_CS    *Next;
-    RedfishEventDestination_V1_3_0_HttpHeaderProperty_CS    *ArrayValue;
-} RedfishEventDestination_V1_3_0_HttpHeaderProperty_Array_CS;
 
 RedfishCS_status
 Json_EventDestination_V1_3_0_To_CS (char *JsonRawText, RedfishEventDestination_V1_3_0_EventDestination_CS **ReturnedCS);

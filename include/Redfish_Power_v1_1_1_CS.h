@@ -1,5 +1,5 @@
 //
-//  (C) Copyright 2018 Hewlett Packard Enterprise Development LP<BR>
+//  (C) Copyright 2018-2019 Hewlett Packard Enterprise Development LP<BR>
 //
 
 #ifndef _RedfishPower_V1_1_1_CSTRUCT_H_
@@ -7,13 +7,13 @@
 
 #include "RedfishCsCommon.h"
 
-typedef struct _RedfishPower_V1_1_1_Voltage_Array_CS RedfishPower_V1_1_1_Voltage_Array_CS;
-typedef struct _RedfishPower_V1_1_1_InputRange_Array_CS RedfishPower_V1_1_1_InputRange_Array_CS;
 #ifndef __Redfishodata_V4_0_0_idRef_Array_CS__
 typedef struct _Redfishodata_V4_0_0_idRef_Array_CS Redfishodata_V4_0_0_idRef_Array_CS;
 #endif
-typedef struct _RedfishPower_V1_1_1_PowerSupply_Array_CS RedfishPower_V1_1_1_PowerSupply_Array_CS;
+typedef struct _RedfishPower_V1_1_1_InputRange_Array_CS RedfishPower_V1_1_1_InputRange_Array_CS;
 typedef struct _RedfishPower_V1_1_1_PowerControl_Array_CS RedfishPower_V1_1_1_PowerControl_Array_CS;
+typedef struct _RedfishPower_V1_1_1_PowerSupply_Array_CS RedfishPower_V1_1_1_PowerSupply_Array_CS;
+typedef struct _RedfishPower_V1_1_1_Voltage_Array_CS RedfishPower_V1_1_1_Voltage_Array_CS;
 typedef struct _RedfishPower_V1_1_1_InputRange_CS RedfishPower_V1_1_1_InputRange_CS;
 typedef struct _RedfishPower_V1_1_1_Power_CS RedfishPower_V1_1_1_Power_CS;
 typedef struct _RedfishPower_V1_1_1_PowerControl_CS RedfishPower_V1_1_1_PowerControl_CS;
@@ -258,7 +258,7 @@ typedef struct _RedfishResource_Status_CS {
     RedfishCS_char            *HealthRollup;    // This represents the overall
                                                // health state from the view of
                                                // this resource.
-    RedfishResource_Oem_CS    *Oem;        
+    RedfishResource_Oem_CS    *Oem;            // Oem extension object.
     RedfishCS_char            *State;          // This indicates the known state
                                                // of the resource, such as if it
                                                // is enabled.
@@ -313,16 +313,6 @@ typedef struct _RedfishPower_V1_1_1_Power_CS {
     RedfishCS_char                               *Voltagesodata_navigationLink;    
 } RedfishPower_V1_1_1_Power_CS;
 
-typedef struct _RedfishPower_V1_1_1_Voltage_Array_CS  {
-    RedfishPower_V1_1_1_Voltage_Array_CS    *Next;
-    RedfishPower_V1_1_1_Voltage_CS    *ArrayValue;
-} RedfishPower_V1_1_1_Voltage_Array_CS;
-
-typedef struct _RedfishPower_V1_1_1_InputRange_Array_CS  {
-    RedfishPower_V1_1_1_InputRange_Array_CS    *Next;
-    RedfishPower_V1_1_1_InputRange_CS    *ArrayValue;
-} RedfishPower_V1_1_1_InputRange_Array_CS;
-
 #ifndef __Redfishodata_V4_0_0_idRef_Array_CS__
 #define __Redfishodata_V4_0_0_idRef_Array_CS__
 typedef struct _Redfishodata_V4_0_0_idRef_Array_CS  {
@@ -331,15 +321,25 @@ typedef struct _Redfishodata_V4_0_0_idRef_Array_CS  {
 } Redfishodata_V4_0_0_idRef_Array_CS;
 #endif
 
-typedef struct _RedfishPower_V1_1_1_PowerSupply_Array_CS  {
-    RedfishPower_V1_1_1_PowerSupply_Array_CS    *Next;
-    RedfishPower_V1_1_1_PowerSupply_CS    *ArrayValue;
-} RedfishPower_V1_1_1_PowerSupply_Array_CS;
+typedef struct _RedfishPower_V1_1_1_InputRange_Array_CS  {
+    RedfishPower_V1_1_1_InputRange_Array_CS    *Next;
+    RedfishPower_V1_1_1_InputRange_CS    *ArrayValue;
+} RedfishPower_V1_1_1_InputRange_Array_CS;
 
 typedef struct _RedfishPower_V1_1_1_PowerControl_Array_CS  {
     RedfishPower_V1_1_1_PowerControl_Array_CS    *Next;
     RedfishPower_V1_1_1_PowerControl_CS    *ArrayValue;
 } RedfishPower_V1_1_1_PowerControl_Array_CS;
+
+typedef struct _RedfishPower_V1_1_1_PowerSupply_Array_CS  {
+    RedfishPower_V1_1_1_PowerSupply_Array_CS    *Next;
+    RedfishPower_V1_1_1_PowerSupply_CS    *ArrayValue;
+} RedfishPower_V1_1_1_PowerSupply_Array_CS;
+
+typedef struct _RedfishPower_V1_1_1_Voltage_Array_CS  {
+    RedfishPower_V1_1_1_Voltage_Array_CS    *Next;
+    RedfishPower_V1_1_1_Voltage_CS    *ArrayValue;
+} RedfishPower_V1_1_1_Voltage_Array_CS;
 
 RedfishCS_status
 Json_Power_V1_1_1_To_CS (char *JsonRawText, RedfishPower_V1_1_1_Power_CS **ReturnedCS);

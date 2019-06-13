@@ -1,5 +1,5 @@
 //
-//  (C) Copyright 2018 Hewlett Packard Enterprise Development LP<BR>
+//  (C) Copyright 2018-2019 Hewlett Packard Enterprise Development LP<BR>
 //
 
 #ifndef _RedfishDrive_V1_0_3_CSTRUCT_H_
@@ -7,11 +7,11 @@
 
 #include "RedfishCsCommon.h"
 
-#ifndef __RedfishResource_V1_1_0_Location_Array_CS__
-typedef struct _RedfishResource_V1_1_0_Location_Array_CS RedfishResource_V1_1_0_Location_Array_CS;
-#endif
 #ifndef __RedfishResource_V1_1_0_Identifier_Array_CS__
 typedef struct _RedfishResource_V1_1_0_Identifier_Array_CS RedfishResource_V1_1_0_Identifier_Array_CS;
+#endif
+#ifndef __RedfishResource_V1_1_0_Location_Array_CS__
+typedef struct _RedfishResource_V1_1_0_Location_Array_CS RedfishResource_V1_1_0_Location_Array_CS;
 #endif
 typedef struct _RedfishDrive_V1_0_3_Drive_CS RedfishDrive_V1_0_3_Drive_CS;
 typedef struct _RedfishDrive_V1_0_3_Drive_Actions_CS RedfishDrive_V1_0_3_Drive_Actions_CS;
@@ -96,7 +96,7 @@ typedef struct _RedfishResource_Status_CS {
     RedfishCS_char            *HealthRollup;    // This represents the overall
                                                // health state from the view of
                                                // this resource.
-    RedfishResource_Oem_CS    *Oem;        
+    RedfishResource_Oem_CS    *Oem;            // Oem extension object.
     RedfishCS_char            *State;          // This indicates the known state
                                                // of the resource, such as if it
                                                // is enabled.
@@ -210,20 +210,20 @@ typedef struct _RedfishDrive_V1_0_3_Drive_CS {
                                                                                     // drive.
 } RedfishDrive_V1_0_3_Drive_CS;
 
-#ifndef __RedfishResource_V1_1_0_Location_Array_CS__
-#define __RedfishResource_V1_1_0_Location_Array_CS__
-typedef struct _RedfishResource_V1_1_0_Location_Array_CS  {
-    RedfishResource_V1_1_0_Location_Array_CS    *Next;
-    RedfishResource_V1_1_0_Location_CS    *ArrayValue;
-} RedfishResource_V1_1_0_Location_Array_CS;
-#endif
-
 #ifndef __RedfishResource_V1_1_0_Identifier_Array_CS__
 #define __RedfishResource_V1_1_0_Identifier_Array_CS__
 typedef struct _RedfishResource_V1_1_0_Identifier_Array_CS  {
     RedfishResource_V1_1_0_Identifier_Array_CS    *Next;
     RedfishResource_V1_1_0_Identifier_CS    *ArrayValue;
 } RedfishResource_V1_1_0_Identifier_Array_CS;
+#endif
+
+#ifndef __RedfishResource_V1_1_0_Location_Array_CS__
+#define __RedfishResource_V1_1_0_Location_Array_CS__
+typedef struct _RedfishResource_V1_1_0_Location_Array_CS  {
+    RedfishResource_V1_1_0_Location_Array_CS    *Next;
+    RedfishResource_V1_1_0_Location_CS    *ArrayValue;
+} RedfishResource_V1_1_0_Location_Array_CS;
 #endif
 
 RedfishCS_status

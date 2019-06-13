@@ -1,6 +1,6 @@
 /** @file
    
-  (C) Copyright 2018 Hewlett Packard Enterprise Development LP<BR>
+  (C) Copyright 2018-2019 Hewlett Packard Enterprise Development LP<BR>
   This software contains information confidential and proprietary to
   Hewlett Packard Enterprise. It shall not be reproduced in whole or in part,
   or transferred to other documents, or disclosed to third parties, or used
@@ -34,9 +34,11 @@ typedef struct _RedfishCS_char_Array RedfishCS_char_Array;
 typedef struct _RedfishCS_int64_Array RedfishCS_int64_Array;
 typedef struct _RedfishCS_bool_Array RedfishCS_bool_Array;
 typedef struct _RedfishCS_Link_Array RedfishCS_Link_Array;
+typedef struct _RedfishCS_EmptyProp_KeyValue RedfishCS_EmptyProp_KeyValue;
 
 typedef enum {
   RedfishCS_Type_CS = 1,
+  RedfishCS_Type_CS_EmptyProp,
   RedfishCS_Type_JSON,
   RedfishCS_Type_Uri
 } RedfishCS_Type;
@@ -108,5 +110,16 @@ typedef struct _RedfishCS_Vague  {
   RedfishCS_Vague_Ptr 	   DataValue;
 } RedfishCS_Vague;
 
+typedef struct _RedfishCS_EmptyProp_KeyValue  {
+  RedfishCS_EmptyProp_KeyValue *NextKeyValuePtr;
+  RedfishCS_char  *KeyNamePtr;
+  RedfishCS_Vague *Value;
+} RedfishCS_EmptyProp_KeyValue;
+
+typedef struct _RedfishCS_Type_EmptyProp_CS_Data {
+  RedfishCS_Header Header;
+  RedfishCS_uint32 NunmOfProperties;
+  RedfishCS_EmptyProp_KeyValue *KeyValuePtr;
+} RedfishCS_Type_EmptyProp_CS_Data;
 
 #endif

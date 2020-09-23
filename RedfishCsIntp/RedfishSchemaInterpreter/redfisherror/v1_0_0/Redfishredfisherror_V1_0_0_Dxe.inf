@@ -1,0 +1,53 @@
+## @file
+#
+#  Auto-generated file by Redfish Schema C Structure Generator.
+#  https://github.com/DMTF/Redfish-Schema-C-Struct-Generator
+#
+#  INF file of redfisherror.v1_0_0 EFI Redfish JSON Structure DXE driver
+#
+#  (C) Copyright 2019 Hewlett Packard Enterprise Development LP<BR>
+#
+#  SPDX-License-Identifier: BSD-2-Clause-Patent
+#
+##
+
+[Defines]
+  INF_VERSION               = 0x00010005
+  BASE_NAME                 = Redfishredfisherror_V1_0_0_Dxe
+  FILE_GUID                 = 968f7850-29c0-4640-a17c-87672323d288
+  MODULE_TYPE               = DXE_DRIVER
+  VERSION_STRING            = 1.0
+  ENTRY_POINT               = Redfishredfisherror_V1_0_0EntryPoint
+  UNLOAD_IMAGE              = Redfishredfisherror_V1_0_0Unload
+
+[Packages]
+  MdePkg/MdePkg.dec
+  MdeModulePkg/MdeModulePkg.dec
+  RedfishPocPkg/RedfishPocPkg.dec
+  HpServerPkg/HpServerPkg.dec
+
+[Sources]
+  Redfishredfisherror_V1_0_0_Dxe.c
+
+[LibraryClasses]
+  BaseLib
+  UefiLib
+  UefiBootServicesTableLib
+  UefiDriverEntryPoint
+  BaseMemoryLib
+  MemoryAllocationLib
+  DebugLib
+  PrintLib
+  JanssonLib
+  HpStringUtilLib
+  redfisherrorV1_0_0Lib
+  
+[Protocols]
+  gEfiRestJsonStructureProtocolGuid ## Consuming
+
+[Depex]
+  gEfiRestJsonStructureProtocolGuid
+
+[BuildOptions]
+  #MSFT:*_*_*_CC_FLAGS = /Od
+

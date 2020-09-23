@@ -1,0 +1,52 @@
+## @file
+#
+#  (C) Copyright 2018 Hewlett Packard Enterprise Development LP<BR>
+#  This software contains information confidential and proprietary to
+#  Hewlett Packard Enterprise. It shall not be reproduced in whole or in part,
+#  or transferred to other documents, or disclosed to third parties, or used
+#  for any purpose other than that for which it was obtained without the prior
+#  written consent of Hewlett Packard Enterprise.
+#
+#
+##
+
+[Defines]
+  INF_VERSION               = 0x00010005
+  BASE_NAME                 = RedfishComputerSystem_V1_4_4_Dxe
+  FILE_GUID                 = 9cb07643-1d60-48c9-b930-c93f28b7f90e
+  MODULE_TYPE               = DXE_DRIVER
+  VERSION_STRING            = 1.0
+  ENTRY_POINT               = RedfishComputerSystem_V1_4_4EntryPoint
+  UNLOAD_IMAGE              = RedfishComputerSystem_V1_4_4Unload
+
+[Packages]
+  MdePkg/MdePkg.dec
+  MdeModulePkg/MdeModulePkg.dec
+  RedfishPocPkg/RedfishPocPkg.dec
+  HpServerPkg/HpServerPkg.dec
+
+[Sources]
+  RedfishComputerSystem_V1_4_4_Dxe.c
+
+[LibraryClasses]
+  BaseLib
+  UefiLib
+  UefiBootServicesTableLib
+  UefiDriverEntryPoint
+  BaseMemoryLib
+  MemoryAllocationLib
+  DebugLib
+  PrintLib
+  JanssonLib
+  HpStringUtilLib
+  ComputerSystemV1_4_4Lib
+  
+[Protocols]
+  gEfiRestResourceInterpreterProtocolGuid ## Consuming
+
+[Depex]
+  gEfiRestResourceInterpreterProtocolGuid
+
+[BuildOptions]
+  #MSFT:*_*_*_CC_FLAGS = /Od
+

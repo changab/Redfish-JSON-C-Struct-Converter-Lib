@@ -1,0 +1,52 @@
+## @file
+#
+#  (C) Copyright 2018 Hewlett Packard Enterprise Development LP<BR>
+#  This software contains information confidential and proprietary to
+#  Hewlett Packard Enterprise. It shall not be reproduced in whole or in part,
+#  or transferred to other documents, or disclosed to third parties, or used
+#  for any purpose other than that for which it was obtained without the prior
+#  written consent of Hewlett Packard Enterprise.
+#
+#
+##
+
+[Defines]
+  INF_VERSION               = 0x00010005
+  BASE_NAME                 = RedfishChassis_V1_8_0_Dxe
+  FILE_GUID                 = 25e34f14-dea7-42ae-8db5-389623fd927b
+  MODULE_TYPE               = DXE_DRIVER
+  VERSION_STRING            = 1.0
+  ENTRY_POINT               = RedfishChassis_V1_8_0EntryPoint
+  UNLOAD_IMAGE              = RedfishChassis_V1_8_0Unload
+
+[Packages]
+  MdePkg/MdePkg.dec
+  MdeModulePkg/MdeModulePkg.dec
+  RedfishPocPkg/RedfishPocPkg.dec
+  HpServerPkg/HpServerPkg.dec
+
+[Sources]
+  RedfishChassis_V1_8_0_Dxe.c
+
+[LibraryClasses]
+  BaseLib
+  UefiLib
+  UefiBootServicesTableLib
+  UefiDriverEntryPoint
+  BaseMemoryLib
+  MemoryAllocationLib
+  DebugLib
+  PrintLib
+  JanssonLib
+  HpStringUtilLib
+  ChassisV1_8_0Lib
+  
+[Protocols]
+  gEfiRestResourceInterpreterProtocolGuid ## Consuming
+
+[Depex]
+  gEfiRestResourceInterpreterProtocolGuid
+
+[BuildOptions]
+  #MSFT:*_*_*_CC_FLAGS = /Od
+

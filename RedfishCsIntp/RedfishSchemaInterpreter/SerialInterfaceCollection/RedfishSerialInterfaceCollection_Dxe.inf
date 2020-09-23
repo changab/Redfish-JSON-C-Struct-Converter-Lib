@@ -1,0 +1,52 @@
+## @file
+#
+#  (C) Copyright 2018 Hewlett Packard Enterprise Development LP<BR>
+#  This software contains information confidential and proprietary to
+#  Hewlett Packard Enterprise. It shall not be reproduced in whole or in part,
+#  or transferred to other documents, or disclosed to third parties, or used
+#  for any purpose other than that for which it was obtained without the prior
+#  written consent of Hewlett Packard Enterprise.
+#
+#
+##
+
+[Defines]
+  INF_VERSION               = 0x00010005
+  BASE_NAME                 = RedfishSerialInterfaceCollection_Dxe
+  FILE_GUID                 = 09c9f53b-8b0a-40d4-bf7a-305f794ee4ac
+  MODULE_TYPE               = DXE_DRIVER
+  VERSION_STRING            = 1.0
+  ENTRY_POINT               = RedfishSerialInterfaceCollectionEntryPoint
+  UNLOAD_IMAGE              = RedfishSerialInterfaceCollectionUnload
+
+[Packages]
+  MdePkg/MdePkg.dec
+  MdeModulePkg/MdeModulePkg.dec
+  RedfishPocPkg/RedfishPocPkg.dec
+  HpServerPkg/HpServerPkg.dec
+
+[Sources]
+  RedfishSerialInterfaceCollection_Dxe.c
+
+[LibraryClasses]
+  BaseLib
+  UefiLib
+  UefiBootServicesTableLib
+  UefiDriverEntryPoint
+  BaseMemoryLib
+  MemoryAllocationLib
+  DebugLib
+  PrintLib
+  JanssonLib
+  HpStringUtilLib
+  SerialInterfaceCollectionLib
+  
+[Protocols]
+  gEfiRestResourceInterpreterProtocolGuid ## Consuming
+
+[Depex]
+  gEfiRestResourceInterpreterProtocolGuid
+
+[BuildOptions]
+  #MSFT:*_*_*_CC_FLAGS = /Od
+
